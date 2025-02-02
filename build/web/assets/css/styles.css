@@ -269,7 +269,8 @@ main {
   margin-left: 100px;
   margin-top: 10px;
   border-radius: 10px;
-  min-height: 100vh;
+  height: 100vh;
+  flex: 1;
 }
 
 .horizontal-line {
@@ -287,6 +288,8 @@ main {
 
 .header {
   font-size: 2rem;
+  font-weight: 500;
+  color: #666;
   padding: 30px 0 10px 15px;
 }
 
@@ -336,4 +339,245 @@ main {
 
 .btn:hover {
   opacity: 0.9;
+}
+
+/* Search Area Filter Date */
+
+.search-area {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.input {
+  height: 100%;
+  padding: 0;
+  border: 1px solid #c4d0eb;
+  color: #757575;
+  font-weight: 500;
+  padding-left: 10px;
+  border-radius: 5px;
+}
+
+.input:focus {
+  border: 2px solid #c4d0eb;
+  outline: none;
+}
+
+.search-box {
+  margin: 20px 0;
+  width: 160px;
+  height: 40px;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.search-box i {
+  position: absolute;
+  top: 12px;
+  right: 0;
+  color: #757575;
+}
+
+.date-filter {
+  display: flex;
+  flex-shrink: 0;
+  gap: 10px;
+  width: 400px;
+  height: 40px;
+}
+
+.date-filter .input {
+  flex: 1;
+  min-width: 0;
+}
+
+.date-container {
+  position: relative;
+  display: inline-block;
+}
+
+.input-date {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: 100%;
+  padding: 10px 40px 10px 10px;
+  font-size: 16px;
+  border: 2px solid #007bff;
+  border-radius: 5px;
+  background-color: #fff;
+  cursor: pointer;
+}
+
+.input-date:focus {
+  border-color: #ff6600;
+  box-shadow: 0 0 5px rgba(255, 102, 0, 0.5);
+}
+
+.input-date::-webkit-calendar-picker-indicator {
+  opacity: 0;
+  width: 100%;
+  position: absolute;
+}
+
+.date-icon {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #007bff;
+  pointer-events: none;
+}
+
+.date-container label {
+  position: absolute;
+  top: -17px;
+  color: #757575;
+  font-weight: 500;
+}
+
+.block__dashboardshow {
+  margin-top: 50px;
+  padding-right: 20px;
+  padding-left: 30px;
+  display: flex;
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  justify-content: space-between;
+}
+
+.block__tostart,
+.block__inprogress,
+.block__done {
+  flex-grow: 1; /* Mỗi block sẽ chiếm phần không gian còn lại */
+}
+
+.block__tostart {
+  max-width: 400px;
+}
+
+.block__inprogress {
+  max-width: 400px;
+}
+.block__done {
+  max-width: 400px;
+}
+
+.state {
+  font-size: 1.8rem;
+  font-weight: 600;
+  position: relative;
+  padding: 20px;
+}
+
+.state::before {
+  content: "";
+  position: absolute;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  left: 0px;
+  top: 50%; /* Căn giữa theo chiều dọc */
+  transform: translateY(-50%); /* Căn giữa hoàn hảo */
+}
+
+.block__tostart .state::before {
+  background-color: #15a1b7;
+}
+.block__inprogress .state::before {
+  background-color: #ffc107; /* Màu của In Progress */
+}
+
+.block__done .state::before {
+  background-color: #8bc349; /* Màu của Done */
+}
+
+.tasks {
+  background-color: #f2f6ff;
+  padding: 10px;
+  border-radius: 10px;
+  height: 100%;
+}
+
+.task-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background-color: #fff;
+  border: 2px solid #c4d0eb;
+  padding: 20px;
+  border-radius: 10px;
+  height: 200px;
+  cursor: pointer;
+}
+
+.task-card .task-header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.task-card .task-header .task-title {
+  font-size: 2.5rem;
+  font-weight: 600;
+}
+
+.task-card .desc {
+  display: -webkit-box; /* Thiết lập để sử dụng tính năng clamp */
+  -webkit-box-orient: vertical; /* Đảm bảo văn bản được căn theo chiều dọc */
+  -webkit-line-clamp: 3; /* Giới hạn số dòng hiển thị là 3 */
+  overflow: hidden; /* Ẩn phần văn bản bị tràn */
+  text-overflow: ellipsis; /* Thêm 3 dấu chấm khi văn bản bị cắt */
+  margin: 15px 0 50px 0;
+  color: #767676;
+}
+
+.task-card .due-date {
+  color: #767676;
+}
+
+.task-card .task-options-btn {
+  border: none;
+  background-color: transparent;
+  font-size: 1.6rem;
+  transform: rotate(90deg);
+  cursor: pointer;
+  color: #767676;
+}
+
+.options-menu {
+  display: none;
+  position: absolute;
+  right: 50px;
+  background-color: white;
+  border: 1px solid #ddd;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 10px;
+  border-radius: 5px;
+  border: 2px solid #c4d0eb;
+}
+
+.options-menu ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.options-menu li {
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.options-menu li:hover {
+  background-color: #f5f5f5;
+}
+
+.task-item:hover .options-menu {
+  display: block; /* Hiển thị menu khi hover vào task-item */
+}
+
+.options-menu.active {
+  display: block;
 }
