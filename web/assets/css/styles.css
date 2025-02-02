@@ -1,0 +1,583 @@
+:root {
+  --primary-color-1: #202d48;
+  --primary-color-2: #ffffff;
+  --primary-color-3: #000000;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 62.5%;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-size: 1.6rem;
+  font-family: "Work Sans", serif;
+}
+
+html,
+body {
+  height: 100%;
+  overflow: hidden; /* Ẩn thanh cuộn */
+  background-color: #5b6677;
+}
+/* Common */
+
+input,
+textarea,
+select,
+button {
+  font-family: inherit;
+}
+
+a {
+  text-decoration: none;
+}
+/* Side bar */
+.sidebar {
+  position: relative;
+  width: 256px;
+  min-height: 100vh;
+  border-top-right-radius: 30px;
+  border-bottom-right-radius: 30px;
+  background-color: #fff;
+  display: flex;
+  gap: 10px;
+  flex-direction: column;
+  padding: 24px;
+  transition: all 0.3s;
+}
+
+.head {
+  gap: 20px;
+  display: flex;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #f6f6f6;
+}
+
+.user-img {
+  width: 44px;
+  height: 44px;
+  border: 1px solid #666;
+  border-radius: 50%;
+}
+.user-img img {
+  width: 100%;
+  border-radius: 50%;
+  height: 44px;
+  object-fit: cover;
+}
+
+.user-details .name {
+  font-size: 1.6rem;
+  font-weight: 500;
+  color: #757575;
+  text-transform: uppercase;
+}
+
+.user-details .title {
+  font-size: 1.4rem;
+  margin-bottom: 5px;
+  font-weight: 500;
+}
+
+.user-details .title,
+.menu .title {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #757575;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+.menu ul li {
+  position: relative;
+  list-style: none;
+  margin-bottom: 5px;
+}
+
+.nav {
+  flex: 1;
+}
+
+.menu ul li a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 500;
+  color: #757575;
+  text-decoration: none;
+  padding: 12px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.menu ul li > a:hover,
+.menu ul li.active > a {
+  color: #000;
+  background-color: #f6f6f6;
+}
+
+.menu ul li .icon {
+  font-size: 2rem;
+}
+
+.menu ul li .arrow {
+  font-size: 14px;
+  transition: all 0.3s;
+}
+
+.menu ul li.active .arrow {
+  transform: rotate(180deg);
+}
+
+.menu ul li .text {
+  flex: 1;
+}
+
+.menu .sub-menu {
+  display: none;
+  margin-left: 20px;
+  padding-left: 20px;
+  padding-top: 5px;
+  border-left: 1px solid #f6f6f6;
+}
+
+.menu .sub-menu li a {
+  padding: 10px 8px;
+  font-size: 1.2rem;
+}
+
+.menu:not(:last-child) {
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+  border-bottom: 2px solid #f6f6f6;
+}
+
+.menu-btn {
+  position: absolute;
+  right: -14px;
+  top: 3.5%;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #757575;
+  border: 2px solid #767676;
+  background-color: #fff;
+}
+
+.menu-btn:hover i {
+  color: #000;
+}
+
+.menu-btn i {
+  transition: all 0.3s;
+}
+
+.sidebar.active {
+  width: 92px;
+}
+
+.sidebar.active .menu-btn i {
+  transform: rotate(180deg);
+}
+
+.sidebar.active .user-details {
+  display: none;
+}
+
+.sidebar.active .menu .title {
+  text-align: center;
+}
+
+.sidebar.active .menu ul li .arrow {
+  display: none;
+}
+
+.sidebar.active .menu > ul > li > a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.sidebar.active .menu > ul > li > a .text {
+  position: absolute;
+  left: 70px;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 10px;
+  border-radius: 4px;
+  color: #fff;
+  background-color: #000;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s;
+}
+
+.sidebar.active .menu > ul > li > a .text::after {
+  content: "";
+  position: absolute;
+  left: -5px;
+  top: 20%;
+  width: 20px;
+  height: 20px;
+  border-radius: 2px;
+  background-color: #000;
+  transform: rotate(45deg);
+  z-index: -1;
+}
+
+.sidebar.active .menu > ul > li > a:hover .text {
+  left: 50px;
+  opacity: 1;
+  visibility: visible;
+}
+
+.sidebar.active .menu .sub-menu {
+  position: absolute;
+  top: 0;
+  left: 20px;
+  width: 200px;
+  border-radius: 20px;
+  padding: 10px 20px;
+  border: 1px solid #f6f6f6;
+  background-color: #fff;
+  box-shadow: 0px 10px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* To do dashboard */
+.container {
+  width: 100%;
+  display: flex;
+  background-color: transparent;
+}
+
+main {
+  flex: 1;
+}
+
+.main {
+  background-color: #fff;
+  margin-left: 100px;
+  margin-top: 10px;
+  border-radius: 10px;
+  height: 100vh;
+  flex: 1;
+}
+
+.horizontal-line {
+  width: 100%;
+  height: 2px;
+  border-radius: 99px;
+  background-color: #f6f6f6;
+  margin-bottom: 50px;
+}
+
+.block-adjust {
+  padding-right: 20px;
+  padding-left: 30px;
+}
+
+.header {
+  font-size: 2rem;
+  font-weight: 500;
+  color: #666;
+  padding: 30px 0 10px 15px;
+}
+
+.body-dashboard {
+  width: 100%;
+}
+
+.box {
+  display: flex;
+  justify-content: space-between;
+}
+
+.box .title {
+  font-size: 3rem;
+  font-weight: 600;
+}
+
+.combo-user {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.combo-user .add {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  text-align: center;
+  font-size: 1.9rem;
+  border: 1px solid #fff;
+}
+
+.btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  width: 120px;
+  height: 40px;
+  background-color: var(--primary-color-1);
+  border-radius: 10px;
+  color: #fff;
+  margin-right: 10px;
+  font-weight: 400;
+}
+
+.btn:hover {
+  opacity: 0.9;
+}
+
+/* Search Area Filter Date */
+
+.search-area {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.input {
+  height: 100%;
+  padding: 0;
+  border: 1px solid #c4d0eb;
+  color: #757575;
+  font-weight: 500;
+  padding-left: 10px;
+  border-radius: 5px;
+}
+
+.input:focus {
+  border: 2px solid #c4d0eb;
+  outline: none;
+}
+
+.search-box {
+  margin: 20px 0;
+  width: 160px;
+  height: 40px;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.search-box i {
+  position: absolute;
+  top: 12px;
+  right: 0;
+  color: #757575;
+}
+
+.date-filter {
+  display: flex;
+  flex-shrink: 0;
+  gap: 10px;
+  width: 400px;
+  height: 40px;
+}
+
+.date-filter .input {
+  flex: 1;
+  min-width: 0;
+}
+
+.date-container {
+  position: relative;
+  display: inline-block;
+}
+
+.input-date {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: 100%;
+  padding: 10px 40px 10px 10px;
+  font-size: 16px;
+  border: 2px solid #007bff;
+  border-radius: 5px;
+  background-color: #fff;
+  cursor: pointer;
+}
+
+.input-date:focus {
+  border-color: #ff6600;
+  box-shadow: 0 0 5px rgba(255, 102, 0, 0.5);
+}
+
+.input-date::-webkit-calendar-picker-indicator {
+  opacity: 0;
+  width: 100%;
+  position: absolute;
+}
+
+.date-icon {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #007bff;
+  pointer-events: none;
+}
+
+.date-container label {
+  position: absolute;
+  top: -17px;
+  color: #757575;
+  font-weight: 500;
+}
+
+.block__dashboardshow {
+  margin-top: 50px;
+  padding-right: 20px;
+  padding-left: 30px;
+  display: flex;
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  justify-content: space-between;
+}
+
+.block__tostart,
+.block__inprogress,
+.block__done {
+  flex-grow: 1; /* Mỗi block sẽ chiếm phần không gian còn lại */
+}
+
+.block__tostart {
+  max-width: 400px;
+}
+
+.block__inprogress {
+  max-width: 400px;
+}
+.block__done {
+  max-width: 400px;
+}
+
+.state {
+  font-size: 1.8rem;
+  font-weight: 600;
+  position: relative;
+  padding: 20px;
+}
+
+.state::before {
+  content: "";
+  position: absolute;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  left: 0px;
+  top: 50%; /* Căn giữa theo chiều dọc */
+  transform: translateY(-50%); /* Căn giữa hoàn hảo */
+}
+
+.block__tostart .state::before {
+  background-color: #15a1b7;
+}
+.block__inprogress .state::before {
+  background-color: #ffc107; /* Màu của In Progress */
+}
+
+.block__done .state::before {
+  background-color: #8bc349; /* Màu của Done */
+}
+
+.tasks {
+  background-color: #f2f6ff;
+  padding: 10px;
+  border-radius: 10px;
+  height: 100%;
+}
+
+.task-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background-color: #fff;
+  border: 2px solid #c4d0eb;
+  padding: 20px;
+  border-radius: 10px;
+  height: 200px;
+  cursor: pointer;
+}
+
+.task-card .task-header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.task-card .task-header .task-title {
+  font-size: 2.5rem;
+  font-weight: 600;
+}
+
+.task-card .desc {
+  display: -webkit-box; /* Thiết lập để sử dụng tính năng clamp */
+  -webkit-box-orient: vertical; /* Đảm bảo văn bản được căn theo chiều dọc */
+  -webkit-line-clamp: 3; /* Giới hạn số dòng hiển thị là 3 */
+  overflow: hidden; /* Ẩn phần văn bản bị tràn */
+  text-overflow: ellipsis; /* Thêm 3 dấu chấm khi văn bản bị cắt */
+  margin: 15px 0 50px 0;
+  color: #767676;
+}
+
+.task-card .due-date {
+  color: #767676;
+}
+
+.task-card .task-options-btn {
+  border: none;
+  background-color: transparent;
+  font-size: 1.6rem;
+  transform: rotate(90deg);
+  cursor: pointer;
+  color: #767676;
+}
+
+.options-menu {
+  display: none;
+  position: absolute;
+  right: 50px;
+  background-color: white;
+  border: 1px solid #ddd;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 10px;
+  border-radius: 5px;
+  border: 2px solid #c4d0eb;
+}
+
+.options-menu ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.options-menu li {
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.options-menu li:hover {
+  background-color: #f5f5f5;
+}
+
+.task-item:hover .options-menu {
+  display: block; /* Hiển thị menu khi hover vào task-item */
+}
+
+.options-menu.active {
+  display: block;
+}

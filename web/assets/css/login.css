@@ -1,0 +1,104 @@
+* {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 62.5%;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-size: 1.6rem;
+  font-family: "Work Sans", serif;
+  background-color: #405b99;
+}
+
+html,
+body {
+  height: 100%;
+  overflow: hidden; /* Ẩn thanh cuộn */
+}
+/* Common */
+
+input,
+textarea,
+select,
+button {
+  font-family: inherit;
+}
+
+a {
+  text-decoration: none;
+}
+.container {
+  display: flex;
+  min-height: 100vh;
+  justify-content: center;
+  align-items: center;
+  opacity: 1;
+}
+
+.login-form {
+  padding: 40px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  width: 600px;
+  height: 700px;
+  background-color: #f2f6ff;
+  border-radius: 10px;
+}
+
+.login-form .header {
+  font-size: 3rem;
+  font-weight: 600;
+  margin: 20px 0 20px 0;
+}
+
+.login-form .desc {
+  font-size: 1.4rem;
+  color: #757575;
+  margin: 20px 0 20px 0;
+}
+
+.login-form .form-group {
+  width: 500px;
+  height: 50px;
+  margin: 20px 0 20px 0;
+}
+
+.login-form .form-group .input-form {
+  height: 100%;
+  width: 90%;
+  border: 1px solid #c4d0eb;
+  border-radius: 5px;
+  padding-left: 20px;
+  font-size: 1.7rem;
+}
+
+.login-form .form-group .input-form:focus {
+  outline: none;
+  border: 1px solid #c4d0eb;
+}
+
+.btn {
+  width: 90%;
+  height: 50px;
+  font-size: 2rem;
+  font-weight: 500;
+  color: #fff;
+  background-color: #202d48;
+  border-radius: 5px;
+  border: none;
+  transition: all 0.3s;
+}
+.btn:hover {
+  background-color: #405b99;
+}
+
+.error-msg {
+  color: red;
+  font-size: 1.4rem;
+  font-weight: 500;
+  padding: 10px;
+}
