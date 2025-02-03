@@ -96,9 +96,12 @@ a {
   background-color: #405b99;
 }
 
-.error-msg {
+.form-msg.invalid {
   color: red;
   font-size: 1.4rem;
   font-weight: 500;
   padding: 10px;
+}
+
+.form-msg {
 }

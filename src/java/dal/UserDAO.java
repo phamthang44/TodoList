@@ -7,6 +7,7 @@ package dal;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import model.User;
 
 /**
@@ -40,4 +41,34 @@ public class UserDAO extends DatabaseConnection {
 
         return null;
     }
+    public User getUserById(int userId) {
+        // phương thức lấy user bằng ID
+
+        String sql = "SELECT * FROM users WHERE id = ?;";
+        
+
+        try {
+            PreparedStatement st = con.prepareStatement(sql);
+            st.setInt(1, userId);
+            ResultSet rs = st.executeQuery();
+            if (rs.next()) {
+                // Tạo đối tượng User từ dữ liệu trong ResultSet
+                User user = new User(
+                        rs.getInt("id"), 
+                        rs.getString("username"),
+                        rs.getString("email"), 
+                        rs.getString("password"), 
+                        rs.getTimestamp("created_at").toLocalDateTime()
+                );
+               
+
+                return user; // Trả về đối tượng User
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+
+        return null;
+    }
+    
 }

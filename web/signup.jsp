@@ -1,9 +1,16 @@
+<%-- 
+    Document   : signup
+    Created on : Feb 2, 2025, 3:30:58 PM
+    Author     : Admin
+--%>
+
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Login Page</title>
+    <title>Signup Page</title>
     <!-- reset css -->
     <link rel="stylesheet" href="./assets/css/reset.css" />
     <!-- Font -->
@@ -31,7 +38,11 @@
   <body>
     <div class="container">
       <form action="login" class="login-form" method="post">
-        <h1 class="header">Welcome back</h1>
+        <h1 class="header">Join our task</h1>
+        <p class="desc">
+          Lorem ipsum dolor, sit amet consectetur adipisicing elit. Fugiat,
+          impedit.
+        </p>
 
         <div class="form-group">
           <input
@@ -40,6 +51,10 @@
             placeholder="Username"
             required
           />
+          <p class="error-msg">must have valid username</p>
+        </div>
+        <div class="form-group">
+          <input type="email" class="input-form" placeholder="Email" required />
           <p class="error-msg"></p>
         </div>
         <div class="form-group">

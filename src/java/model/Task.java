@@ -21,7 +21,6 @@ public class Task {
     private LocalDateTime createAt;
     private LocalDateTime updateAt;
     private User user;
-    private Project project;
     public Task() {
     }
     
@@ -33,7 +32,7 @@ public class Task {
         HIGH, MEDIUM, LOW;
     }
     
-    public Task(int id, String title, String description, Status status, Priority priority, LocalDateTime dueDate, LocalDateTime createAt, LocalDateTime updateAt, User user, Project project) {
+    public Task(int id, String title, String description, Status status, Priority priority, LocalDateTime dueDate, LocalDateTime createAt, LocalDateTime updateAt, User user) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -43,15 +42,7 @@ public class Task {
         this.createAt = createAt;
         this.updateAt = updateAt;
         this.user = user;
-        this.project = project;
-    }
 
-    public Project getProject() {
-        return project;
-    }
-
-    public void setProject(Project project) {
-        this.project = project;
     }
 
     public int getId() {
