@@ -4,6 +4,7 @@
  */
 package model;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.time.LocalDateTime;
 
@@ -17,7 +18,7 @@ public class Task {
     private String description;
     private Status status;
     private Priority priority;
-    private LocalDateTime dueDate;
+    private LocalDate dueDate;
     private LocalDateTime createAt;
     private LocalDateTime updateAt;
     private User user;
@@ -25,14 +26,14 @@ public class Task {
     }
     
     public enum Status {
-        TO_DO, IN_PROGRESS, DONE;
+        Pending, TO_DO, IN_PROGRESS, DONE;
     }
 
     public enum Priority {
-        HIGH, MEDIUM, LOW;
+        HIGH, Medium, LOW;
     }
     
-    public Task(int id, String title, String description, Status status, Priority priority, LocalDateTime dueDate, LocalDateTime createAt, LocalDateTime updateAt, User user) {
+    public Task(int id, String title, String description, Status status, Priority priority, LocalDate dueDate, LocalDateTime createAt, LocalDateTime updateAt, User user) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -85,11 +86,11 @@ public class Task {
         this.priority = priority;
     }
 
-    public LocalDateTime getDueDate() {
+    public LocalDate getDueDate() {
         return dueDate;
     }
 
-    public void setDueDate(LocalDateTime dueDate) {
+    public void setDueDate(LocalDate dueDate) {
         this.dueDate = dueDate;
     }
 

@@ -34,3 +34,53 @@ taskCards.forEach((taskCard) => {
     }
   };
 });
+
+// async function loadTasks() {
+//   try {
+//     let response = await fetch("http://localhost:9999/todolist/api/tasks"); // API lấy danh sách task
+//     let tasks = await response.json(); // Chuyển JSON thành object
+//     console.log(tasks);
+
+//     let taskList = document.getElementById("taskList"); // Lấy danh sách ul
+//     taskList.innerHTML = ""; // Xóa nội dung cũ trước khi render mới
+
+//     tasks.forEach((task) => {
+//       let li = document.createElement("li");
+//       li.classList.add("task-item-card");
+
+//       li.innerHTML = `
+//               <div class="task-card">
+//                   <div class="task-header">
+//                       <h3 class="task-title">${task.title}</h3>
+//                       <button class="task-options-btn">
+//                           <i class="fa fa-ellipsis-h"></i>
+//                       </button>
+//                   </div>
+//                   <div class="options-menu">
+//                       <ul>
+//                           <li class="edit-task" data-id="${
+//                             task.id
+//                           }">Edit Task</li>
+//                           <li class="delete-task" data-id="${
+//                             task.id
+//                           }">Delete Task</li>
+//                       </ul>
+//                   </div>
+//                   <p class="desc">${
+//                     task.description ? task.description : "No description"
+//                   }</p>
+//                   <p class="due-date">${
+//                     task.dueDate ? task.dueDate : "No due date"
+//                   }</p>
+//               </div>
+//           `;
+
+//       taskList.appendChild(li);
+//     });
+//   } catch (error) {
+//     console.error("Error loading tasks:", error);
+//   }
+// }
+
+// // Gọi hàm khi trang web load
+// document.addEventListener("DOMContentLoaded", loadTasks);
