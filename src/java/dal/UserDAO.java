@@ -17,7 +17,7 @@ public class UserDAO extends DatabaseConnection {
 
     public User checkUser(String username, String password) {
         String sql = "SELECT * FROM Users WHERE Username=? AND Password=?";
-
+        User user = null;
         try {
             PreparedStatement st = con.prepareStatement(sql);
             st.setString(1, username);
@@ -25,19 +25,18 @@ public class UserDAO extends DatabaseConnection {
             ResultSet rs = st.executeQuery();
             if (rs.next()) {
                 // Tạo đối tượng User từ dữ liệu trong ResultSet
-                User user = new User();
+                user = new User();
                 user.setId(rs.getInt("id")); // Lấy ID từ cơ sở dữ liệu
                 user.setUsername(rs.getString("username")); // Lấy Username
                 user.setEmail(rs.getString("email")); // Lấy Email
                 user.setPassword(rs.getString("password")); // Lấy Password
 
-                return user; // Trả về đối tượng User
             }
         } catch (SQLException e) {
             System.out.println(e);
         }
 
-        return null;
+        return user;
     }
     
     
@@ -60,7 +59,6 @@ public class UserDAO extends DatabaseConnection {
                         rs.getString("password") 
                 );
                
-
                 return user; // Trả về đối tượng User
             }
         } catch (SQLException e) {

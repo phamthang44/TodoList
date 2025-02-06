@@ -12,6 +12,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import model.User;
 
 /**
@@ -50,15 +51,15 @@ public class Login extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String username = request.getParameter("username");
-        String password = request.getParameter("password");
+        String password= request.getParameter("password");
         
         UserDAO udao = new UserDAO();
         User user = udao.checkUser(username, password);
-        
+
         if (user != null) {
             //giờ viết logic ném username, id sang bên trang home.jsp để bên đó nhận id
-            request.setAttribute("valid", "Valid!");
-            request.setAttribute("userInfo", user);
+            HttpSession session = request.getSession();
+            session.setAttribute("account", user);
             request.getRequestDispatcher("home.jsp").forward(request, response);
         } else {
             request.setAttribute("invalid", "Username or Password is invalid!");
