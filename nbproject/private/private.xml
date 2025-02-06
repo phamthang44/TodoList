@@ -4,13 +4,13 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/D:/Desktop/GCS230575-Java%20Backend/JavaWeb/TodoList-App/src/java/model/Task.java</file>
-            <file>file:/D:/Desktop/GCS230575-Java%20Backend/JavaWeb/TodoList-App/web/signup.jsp</file>
+            <file>file:/D:/Desktop/GCS230575-Java%20Backend/JavaWeb/TodoList-App/src/java/controller/TasksServlet.java</file>
             <file>file:/D:/Desktop/GCS230575-Java%20Backend/JavaWeb/TodoList-App/src/java/dal/TaskDAO.java</file>
+            <file>file:/D:/Desktop/GCS230575-Java%20Backend/JavaWeb/TodoList-App/web/js/script.js</file>
             <file>file:/D:/Desktop/GCS230575-Java%20Backend/JavaWeb/TodoList-App/web/index.html</file>
-            <file>file:/D:/Desktop/GCS230575-Java%20Backend/JavaWeb/TodoList-App/src/java/model/User.java</file>
             <file>file:/D:/Desktop/GCS230575-Java%20Backend/JavaWeb/TodoList-App/web/home.jsp</file>
+            <file>file:/D:/Desktop/GCS230575-Java%20Backend/JavaWeb/TodoList-App/src/java/controller/Home.java</file>
             <file>file:/D:/Desktop/GCS230575-Java%20Backend/JavaWeb/TodoList-App/src/java/dal/UserDAO.java</file>
-            <file>file:/D:/Desktop/GCS230575-Java%20Backend/JavaWeb/TodoList-App/web/login.jsp</file>
             <file>file:/D:/Desktop/GCS230575-Java%20Backend/JavaWeb/TodoList-App/src/java/controller/Login.java</file>
         </group>
     </open-files>

@@ -8,6 +8,7 @@ import dal.UserDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -17,6 +18,7 @@ import model.User;
  *
  * @author Admin
  */
+@WebServlet(name = "Login", urlPatterns = {"/login"})
 public class Login extends HttpServlet {
 
     
@@ -40,7 +42,7 @@ public class Login extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.getRequestDispatcher("home.jsp").forward(request, response);
+        request.getRequestDispatcher("login.jsp").forward(request, response);
     }
 
  
@@ -51,12 +53,16 @@ public class Login extends HttpServlet {
         String password = request.getParameter("password");
         
         UserDAO udao = new UserDAO();
-        User user = udao.check(username, password);
+        User user = udao.checkUser(username, password);
+        
         if (user != null) {
-            response.sendRedirect("index.htmls");
+            //giờ viết logic ném username, id sang bên trang home.jsp để bên đó nhận id
+            request.setAttribute("valid", "Valid!");
+            request.setAttribute("userInfo", user);
+            request.getRequestDispatcher("home.jsp").forward(request, response);
         } else {
-            String error = "Invalid password or username";
-            System.out.println(error);
+            request.setAttribute("invalid", "Username or Password is invalid!");
+            request.getRequestDispatcher("login.jsp").forward(request, response);
         }
         
     }

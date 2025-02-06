@@ -4,9 +4,6 @@
  */
 package model;
 
-import java.time.LocalDateTime;
-import java.util.Date;
-
 /**
  *
  * @author Admin
@@ -16,17 +13,15 @@ public class User {
     private String username;
     private String email;
     private String password;
-    private LocalDateTime createAt;
 
     public User() {
     }
 
-    public User(int id, String username, String email, String password, LocalDateTime createAt) {
+    public User(int id, String username, String email, String password) {
         this.id = id;
         this.username = username;
         this.email = email;
         this.password = password;
-        this.createAt = createAt;
     }
 
     public int getId() {
@@ -60,15 +55,6 @@ public class User {
     public void setPassword(String password) {
         this.password = password;
     }
-
-    public LocalDateTime getCreateAt() {
-        return createAt;
-    }
-
-    public void setCreateAt(LocalDateTime createAt) {
-        this.createAt = createAt;
-    }
-    
     
     
 }

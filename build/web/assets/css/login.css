@@ -96,12 +96,13 @@ a {
   background-color: #405b99;
 }
 
-.form-msg.invalid {
+.form-group.invalid .input-form {
+  border-color: #f33a58;
+}
+
+.form-group.invalid .form-message {
   color: red;
   font-size: 1.4rem;
   font-weight: 500;
   padding: 10px;
-}
-
-.form-msg {
 }

@@ -1,40 +1,30 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package model;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.time.LocalDateTime;
 
-/**
- *
- * @author Admin
- */
 public class Task {
     private int id;
+    private User user; // Liên kết với User
+    private Todolist todolist; // Liên kết với Todolist
     private String title;
     private String description;
-    private Status status;
-    private Priority priority;
-    private LocalDate dueDate;
-    private LocalDateTime createAt;
-    private LocalDateTime updateAt;
-    private User user;
-    public Task() {
-    }
-    
-    public enum Status {
-        Pending, TO_DO, IN_PROGRESS, DONE;
-    }
+    private String status;
+    private String priority;
+    private LocalDate dueDate; // Sử dụng LocalDate cho ngày (chỉ ngày, không có thời gian)
+    private LocalDateTime createAt; // Sử dụng LocalDateTime cho ngày giờ
+    private LocalDateTime updateAt; // Sử dụng LocalDateTime cho ngày giờ
 
-    public enum Priority {
-        HIGH, Medium, LOW;
-    }
-    
-    public Task(int id, String title, String description, Status status, Priority priority, LocalDate dueDate, LocalDateTime createAt, LocalDateTime updateAt, User user) {
+
+    // Constructor mặc định
+    public Task() {}
+
+    // Constructor đầy đủ
+    public Task(int id, User user, Todolist todolist, String title, String description,
+                String status, String priority, LocalDate dueDate, LocalDateTime createAt, LocalDateTime updateAt) {
         this.id = id;
+        this.user = user;
+        this.todolist = todolist;
         this.title = title;
         this.description = description;
         this.status = status;
@@ -42,16 +32,31 @@ public class Task {
         this.dueDate = dueDate;
         this.createAt = createAt;
         this.updateAt = updateAt;
-        this.user = user;
-
     }
 
+    // Getter và Setter
     public int getId() {
         return id;
     }
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Todolist getTodolist() {
+        return todolist;
+    }
+
+    public void setTodolist(Todolist todolist) {
+        this.todolist = todolist;
     }
 
     public String getTitle() {
@@ -70,19 +75,19 @@ public class Task {
         this.description = description;
     }
 
-    public Status getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(Status status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 
-    public Priority getPriority() {
+    public String getPriority() {
         return priority;
     }
 
-    public void setPriority(Priority priority) {
+    public void setPriority(String priority) {
         this.priority = priority;
     }
 
@@ -109,13 +114,4 @@ public class Task {
     public void setUpdateAt(LocalDateTime updateAt) {
         this.updateAt = updateAt;
     }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-    
 }

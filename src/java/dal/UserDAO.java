@@ -7,7 +7,6 @@ package dal;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
 import model.User;
 
 /**
@@ -16,7 +15,7 @@ import model.User;
  */
 public class UserDAO extends DatabaseConnection {
 
-    public User check(String username, String password) {
+    public User checkUser(String username, String password) {
         String sql = "SELECT * FROM Users WHERE Username=? AND Password=?";
 
         try {
@@ -31,7 +30,6 @@ public class UserDAO extends DatabaseConnection {
                 user.setUsername(rs.getString("username")); // Lấy Username
                 user.setEmail(rs.getString("email")); // Lấy Email
                 user.setPassword(rs.getString("password")); // Lấy Password
-                user.setCreateAt(rs.getTimestamp("created_at").toLocalDateTime()); // Lấy created_at và chuyển đổi thành LocalDateTime
 
                 return user; // Trả về đối tượng User
             }
@@ -41,9 +39,11 @@ public class UserDAO extends DatabaseConnection {
 
         return null;
     }
+    
+    
     public User getUserById(int userId) {
         // phương thức lấy user bằng ID
-
+        
         String sql = "SELECT * FROM users WHERE id = ?;";
         
 
@@ -57,8 +57,7 @@ public class UserDAO extends DatabaseConnection {
                         rs.getInt("id"), 
                         rs.getString("username"),
                         rs.getString("email"), 
-                        rs.getString("password"), 
-                        rs.getTimestamp("created_at").toLocalDateTime()
+                        rs.getString("password") 
                 );
                
 
@@ -71,4 +70,46 @@ public class UserDAO extends DatabaseConnection {
         return null;
     }
     
+    
+    public void createUser(User user) {
+        String sql = "INSERT INTO users (name, email, password) VALUES (?, ?, ?)";
+        try {
+            PreparedStatement st = con.prepareStatement(sql);
+            st.setString(1, user.getUsername());
+            st.setString(2, user.getEmail());
+            st.setString(3, user.getPassword());
+            st.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    //hàm này sẽ được gọi bởi servlet update user trong 1 trang update thông tin
+    //servlet đó sẽ tạo object User bằng việc nhận dữ liệu từ form chỉnh sửa
+    //gọi UserDAO ném vào ( User ) tương tự hàm tạo
+    public void updateUser(User user) {
+        String sql = "UPDATE users SET username = ?, emai = ?, password = ? WHERE id = ?";
+        try {
+            PreparedStatement st = con.prepareStatement(sql);
+            st.setString(1, user.getUsername());
+            st.setString(2, user.getEmail());
+            st.setString(3, user.getPassword());
+            st.setInt(4, user.getId());
+            st.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public void deleteUser(int userId) {
+        String sql = "DELETE FROM users WHERE id = ?";
+        try {
+            PreparedStatement st = con.prepareStatement(sql);
+            st.setInt(1, userId);
+            st.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        
+        
+    }
 }

@@ -12,36 +12,35 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import model.Task;
-import model.Task.Priority;
-import model.Task.Status;
 import model.User;
 
 public class TaskDAO extends DatabaseConnection {
 
-    public List<Task> getAllTasks() {
+    public List<Task> getTasksByTodolistAndUser(int todolistId, int userId) {
         List<Task> tasks = new ArrayList<>();
-        String sql = "SELECT * FROM tasks;";
-        UserDAO udao = new UserDAO();
-        try (PreparedStatement st = con.prepareStatement(sql); ResultSet rs = st.executeQuery()) {
+        String sql = "SELECT * FROM tasks WHERE todolist_id = ? AND user_id = ?";
 
-            while (rs.next()) {
-                // Chuyển đổi dữ liệu
-                int id = rs.getInt("id");
-                String title = rs.getString("title");
-                String description = rs.getString("description");
-                Status status = Status.valueOf(rs.getString("status"));
-                Priority priority = Priority.valueOf(rs.getString("priority"));
-                LocalDate dueDate = rs.getDate("due_date") != null ? rs.getDate("due_date").toLocalDate() : null;
-                LocalDateTime createdAt = rs.getTimestamp("created_at") != null ? rs.getTimestamp("created_at").toLocalDateTime() : null;
-                LocalDateTime updatedAt = rs.getTimestamp("updated_at") != null ? rs.getTimestamp("updated_at").toLocalDateTime() : null;
+        try (PreparedStatement statement = con.prepareStatement(sql)) {
+            // Đặt các tham số vào câu lệnh SQL
+            statement.setInt(1, todolistId);
+            statement.setInt(2, userId);
 
-                int userId = rs.getInt("user_id");
+            ResultSet resultSet = statement.executeQuery();
 
-                // Lấy đối tượng User (phương thức để lấy User từ userId)
-                User user = udao.getUserById(userId);
+            // Duyệt qua kết quả và tạo đối tượng Task cho mỗi dòng dữ liệu
+            while (resultSet.next()) {
+                int id = resultSet.getInt("id");
+                String title = resultSet.getString("title");
+                String description = resultSet.getString("description");
+                Status status = Status.valueOf(resultSet.getString("status"));
+                Priority priority = Priority.valueOf(resultSet.getString("priority"));
+                Date dueDate = resultSet.getDate("due_date");
+                Timestamp createAt = resultSet.getTimestamp("created_at");
+                Timestamp updateAt = resultSet.getTimestamp("updated_at");
 
-                // Khởi tạo đối tượng Task
-                Task task = new Task(id, title, description, status, priority, dueDate, createdAt, updatedAt, user);
+                Task task = new Task(id, title, description, status, priority, dueDate.toLocalDate(), 
+                        createAt.toLocalDateTime(), updateAt.toLocalDateTime(), userId);
+                
                 tasks.add(task);
             }
         } catch (SQLException e) {

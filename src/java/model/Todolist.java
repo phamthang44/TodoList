@@ -4,31 +4,29 @@
  */
 package model;
 
-import java.time.LocalDateTime;
-import java.util.List;
 
 /**
  *
  * @author Admin
  */
-public class Project {
+import java.util.List;
+
+public class Todolist {
     private int id;
+    private int user_id; 
     private String name;
-    private String description;
-    private LocalDateTime createdAt;
     private List<Task> tasks; // Danh sách task thuộc dự án này
 
-    public Project() {}
+    // Constructor không có tham số
+    public Todolist() {}
 
-    public Project(int id, String name, String description, LocalDateTime createdAt) {
+    // Constructor có tham số
+    public Todolist(int id, int user_id, String name) {
         this.id = id;
+        this.user_id = user_id;
         this.name = name;
-        this.description = description;
-        this.createdAt = createdAt;
     }
 
-    
-    
     // Getter và Setter
 
     public int getId() {
@@ -47,28 +45,20 @@ public class Project {
         this.name = name;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
 
     public List<Task> getTasks() {
         return tasks;
     }
 
+    public int getUserId() {
+        return user_id;
+    }
+
+    public void setUserId(int user_id) {
+        this.user_id = user_id;
+    }
+
     public void setTasks(List<Task> tasks) {
         this.tasks = tasks;
     }
-    
 }

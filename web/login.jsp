@@ -45,7 +45,7 @@
             id="username"
             autocomplete="off"
           />
-          <span class="form-msg"></span>
+          <span class="form-message"></span>
         </div>
         <div class="form-group">
           <input
@@ -57,7 +57,7 @@
             id="password"
             autocomplete="off"
           />
-          <span class="form-msg"></span>
+          <span class="form-message"></span>
         </div>
         <div class="form-group">
           <button class="btn">Login</button>
@@ -67,12 +67,17 @@
     <script src="./js/validator.js"></script>
     <script>
       //mong muốn của ta
-      Validator({
-        form: "form-login",
-        rules: [
-          Validator.isRequired("#username"),
-          Validator.isPassword("#password"),
-        ],
+      document.addEventListener("DOMContentLoaded", function () {
+        Validator({
+          form: "#form-login",
+          formGroupSelector: ".form-group",
+          formMessage: ".form-message",
+          rules: [
+            Validator.isRequired("#username"),
+            Validator.isRequired("#password"),
+            Validator.minLength("#password", 6, "Vui lòng không bỏ trống"),
+          ],
+        });
       });
     </script>
   </body>
