@@ -1,6 +1,6 @@
 <%-- Document : login Created on : Feb 2, 2025, 3:30:30 PM Author : Admin --%>
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@page contentType="text/html" pageEncoding="UTF-8"%> <%@taglib prefix="c"
+uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -24,48 +24,78 @@
       src="https://kit.fontawesome.com/0d08ec65dc.js"
       crossorigin="anonymous"
     ></script>
-   
-    
   </head>
   <body>
     <div class="container">
-      <form action="login" class="login-form" method="post" id="form-login">
-        <% 
-            String invalid = (String)request.getAttribute("invalid");
-        %>
-        
+      <form
+        action="login"
+        class="login-form"
+        method="post"
+        id="form-login"
+        onSubmit=""
+      >
         <h1 class="header">Welcome back</h1>
-        <div class="form-group invalid">
-              <input
-                type="text"
-                class="input-form"
-                placeholder="Username"
-                required
-                name="username"
-                id="username"
-                autocomplete="off"
-              />
-              <span class="form-message"><%= invalid %></span>
-            </div>
-        
-        
+        <div class="form-group">
+          <input
+            type="text"
+            class="input-form"
+            placeholder="Username"
+            name="username"
+            id="username"
+            autocomplete="off"
+          />
+          <span class="form-message"></span>
+        </div>
+
         <div class="form-group">
           <input
             type="password"
             class="input-form"
             placeholder="Password"
             name="password"
-            required
             id="password"
             autocomplete="off"
           />
-          <span class="form-message"><%= invalid %></span>
+          <span class="form-message"></span>
         </div>
         <div class="form-group">
           <button class="btn">Login</button>
         </div>
+        <div class="form-group">
+          <input
+            type="checkbox"
+            name="remember"
+            class="remember"
+            value="check"
+            id="remember-me"
+          />
+          <label for="remember-me">Remember me?</label>
+          <a href="signup" class="signup-btn">Or Sign up Here</a>
+        </div>
       </form>
     </div>
-    
+    <script src="${pageContext.request.contextPath}/js/validator.js"></script>
+    <script>
+      Validator({
+        form: "#form-login",
+        formGroupSelector: ".form-group",
+        formMessage: ".form-message",
+        rules: [
+          Validator.isRequired("#username"),
+          Validator.isRequired("#password"),
+          Validator.minLength("#password", 6, "Please input this field"),
+        ],
+      });
+      const invalid = document.querySelector(".invalid");
+      const formGroup = document.querySelector(".form-group");
+      if (invalid) {
+        formGroup.onclick = function (e) {
+          const btn = e.target.closest(".btn");
+          btn.preventDefault();
+          btn.stopPropagation();
+          btn.disabled = true;
+        };
+      }
+    </script>
   </body>
 </html>

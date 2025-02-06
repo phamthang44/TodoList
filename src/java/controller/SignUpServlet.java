@@ -4,7 +4,6 @@
  */
 package controller;
 
-import dal.UserDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -12,17 +11,15 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-import model.User;
 
 /**
  *
  * @author Admin
  */
-@WebServlet(name = "Login", urlPatterns = {"/login"})
-public class Login extends HttpServlet {
+@WebServlet(name = "SignUpServlet", urlPatterns = {"/signup"})
+public class SignUpServlet extends HttpServlet {
 
-    
+ 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
@@ -31,45 +28,30 @@ public class Login extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet Login</title>");
+            out.println("<title>Servlet SignUpServlet</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet Login at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet SignUpServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
     }
 
+    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+    
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.getRequestDispatcher("login.jsp").forward(request, response);
+        request.getRequestDispatcher("signup.jsp").forward(request, response);
     }
 
- 
+    
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String username = request.getParameter("username");
-        String password= request.getParameter("password");
-        
-        UserDAO udao = new UserDAO();
-        User user = udao.checkUser(username, password);
-
-        if (user != null) {
-            //giờ viết logic ném username, id sang bên trang home.jsp để bên đó nhận id
-            HttpSession session = request.getSession();
-            session.setAttribute("account", user);
-            response.sendRedirect("home.jsp");
-        } else {
-            request.setAttribute("invalid", "Username or Password is invalid!");
-            request.setAttribute("invalid2", "invalid");
-            request.getRequestDispatcher("login.jsp").forward(request, response);
-        }
-        
     }
 
-   
     @Override
     public String getServletInfo() {
         return "Short description";

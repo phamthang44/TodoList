@@ -1,9 +1,4 @@
-<%-- 
-    Document   : signup
-    Created on : Feb 2, 2025, 3:30:58 PM
-    Author     : Admin
---%>
-
+<%-- Document : signup Created on : Feb 2, 2025, 3:30:58 PM Author : Admin --%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
@@ -28,16 +23,10 @@
       src="https://kit.fontawesome.com/0d08ec65dc.js"
       crossorigin="anonymous"
     ></script>
-    <!-- jQuery phiên bản mới nhất (3.x) -->
-    <script
-      src="https://code.jquery.com/jquery-3.7.1.min.js"
-      integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
-      crossorigin="anonymous"
-    ></script>
   </head>
   <body>
     <div class="container">
-      <form action="login" class="login-form" method="post">
+      <form action="signup" class="login-form" method="post" id="form-signup">
         <h1 class="header">Join our task</h1>
         <p class="desc">
           Lorem ipsum dolor, sit amet consectetur adipisicing elit. Fugiat,
@@ -49,27 +38,61 @@
             type="text"
             class="input-form"
             placeholder="Username"
-            required
+            id="username"
+            autocomplete="off"
           />
-          <p class="error-msg">must have valid username</p>
+          <span class="form-message"></span>
         </div>
         <div class="form-group">
-          <input type="email" class="input-form" placeholder="Email" required />
-          <p class="error-msg"></p>
+          <input
+            type="email"
+            class="input-form"
+            placeholder="Email"
+            id="email"
+            autocomplete="off"
+          />
+          <span class="form-message"></span>
         </div>
         <div class="form-group">
           <input
             type="password"
             class="input-form"
             placeholder="Password"
-            required
+            name="password"
+            id="password"
+            autocomplete="off"
           />
-          <p class="error-msg"></p>
+          <span class="form-message"></span>
         </div>
         <div class="form-group">
-          <button class="btn">Login</button>
+          <button class="signup-page signup-btn">Signup</button>
+          <a href="login" class="backto-login">Back to login</a>
         </div>
       </form>
     </div>
+    <script src="${pageContext.request.contextPath}/js/validator.js"></script>
+    <script>
+      Validator({
+        form: "#form-signup",
+        formGroupSelector: ".form-group",
+        formMessage: ".form-message",
+        rules: [
+          Validator.isRequired("#username"),
+          Validator.isRequired("#password"),
+          Validator.minLength("#password", 6, "Please do not empty this field"),
+          Validator.isRequired("#email"),
+          Validator.isEmail("#email"),
+        ],
+      });
+      const invalid = document.querySelector(".invalid");
+      const formGroup = document.querySelector(".form-group");
+      if (invalid) {
+        formGroup.onclick = function (e) {
+          const btn = e.target.closest(".btn");
+          btn.preventDefault();
+          btn.stopPropagation();
+        };
+      }
+    </script>
   </body>
 </html>

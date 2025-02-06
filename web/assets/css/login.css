@@ -63,13 +63,13 @@ a {
 
 .login-form .form-group {
   width: 500px;
-  height: 50px;
-  margin: 20px 0 20px 0;
+  height: 100px;
+  padding: 20px 0 20px 0;
 }
 
 .login-form .form-group .input-form {
+  width: 100%;
   height: 100%;
-  width: 90%;
   border: 1px solid #c4d0eb;
   border-radius: 5px;
   padding-left: 20px;
@@ -82,27 +82,96 @@ a {
 }
 
 .btn {
-  width: 90%;
-  height: 50px;
-  font-size: 2rem;
-  font-weight: 500;
-  color: #fff;
-  background-color: #202d48;
-  border-radius: 5px;
-  border: none;
-  transition: all 0.3s;
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  padding: 15px 0;
+  text-align: center;
+  font-size: 18px;
+  letter-spacing: 1px;
+  text-decoration: none;
+  color: #725ac1;
+  background: transparent;
+  cursor: pointer;
+  transition: ease-out 0.5s;
+  border: 2px solid #725ac1;
+  border-radius: 10px;
+  box-shadow: inset 0 0 0 0 #725ac1;
 }
 .btn:hover {
-  background-color: #405b99;
+  color: white;
+  box-shadow: inset 0 -100px 0 0 #725ac1;
+}
+
+.btn:active {
+  transform: scale(0.9);
 }
 
 .form-group.invalid .input-form {
-  border-color: #f33a58;
+  border-color: red;
 }
 
 .form-group.invalid .form-message {
+  display: inline-block;
   color: red;
   font-size: 1.4rem;
   font-weight: 500;
-  padding: 10px;
+  padding: 10px 0 0 0;
+}
+
+.signup-btn {
+  position: relative;
+  display: inline-block;
+  margin: 15px;
+  padding: 15px 30px;
+  text-align: center;
+  font-size: 18px;
+  letter-spacing: 1px;
+  text-decoration: none;
+  color: #725ac1;
+  background: transparent;
+  cursor: pointer;
+  transition: ease-out 0.5s;
+  border: 2px solid #725ac1;
+  border-radius: 10px;
+  box-shadow: inset 0 0 0 0 #725ac1;
+}
+.signup-btn:hover {
+  color: white;
+  box-shadow: inset 0 -100px 0 0 #725ac1;
+}
+button:active {
+  transform: scale(0.9);
+}
+
+.signup-btn,
+.btn:has([attribute="disabled"])::before:hover {
+  content: "";
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  background-color: red;
+}
+
+.backto-login {
+  color: #725ac1;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.backto-login:hover {
+  color: #5b35d7;
+  transform: scale(0.9);
+}
+
+.backto-login:active {
+  transform: scale(1);
+}
+
+.signup-page .signup-btn {
+  width: 100%;
+}
+
+.btn-group {
+  display: flex;
 }

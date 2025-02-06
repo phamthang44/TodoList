@@ -209,7 +209,7 @@ Validator.isRequired = function (selector) {
     selector: selector,
     test: function (value) {
       //thằng này kiểm tra xem user nhập gì chưa
-      return value ? undefined : "Vui lòng nhập trường này";
+      return value ? undefined : "Please input this field";
     },
   };
 };
@@ -221,7 +221,7 @@ Validator.isEmail = function (selector, message) {
       let regex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
       return regex.test(value)
         ? undefined
-        : message || "Trường này phải là email";
+        : message || "This field must be an email";
       //thằng này kiểm tra xem có phải email hong ?
     },
   };
@@ -233,7 +233,7 @@ Validator.minLength = function (selector, min, message) {
     test: function (value) {
       return value.length >= min
         ? undefined
-        : message || `Vui lòng nhập tối thiểu ${min} kí tự`;
+        : message || `Please input at least ${min} characters`;
       // này mới validate check độ dài
       // còn kiểu bảo mật cao hơn thì chưa biết
       //thằng này kiểm tra xem có tối thiểu kí tự nọ không hong ?
@@ -247,7 +247,7 @@ Validator.isConfirmed = function (selector, getConfirmedValue, message) {
     test: function (value) {
       return value === getConfirmedValue()
         ? undefined
-        : message || "Giá trị nhập vào không chính xác";
+        : message || "The confirmation does not match with the password!";
     },
   };
 };
