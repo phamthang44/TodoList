@@ -35,9 +35,7 @@
     ></script>
   </head>
   <body>
-    <% User user = (User) session.getAttribute("account"); if (user == null) {
-    response.sendRedirect("login.jsp"); // Nếu chưa đăng nhập, quay lại login }
-    %>
+    <% User user = (User) session.getAttribute("account");%>
     <div class="container">
       <div class="sidebar">
         <div class="menu-btn">

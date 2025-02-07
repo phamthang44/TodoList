@@ -581,3 +581,140 @@ main {
 .options-menu.active {
   display: block;
 }
+
+.container-profile {
+  background-color: #fff;
+  margin-left: 100px;
+  margin-top: 10px;
+  border-radius: 10px;
+  height: 100vh;
+  flex: 1;
+}
+
+.header-profile {
+  height: 100px;
+  width: 100%;
+  font-size: 4rem;
+  padding: 30px 0 0 20px;
+}
+
+.block-profile {
+  width: 96%;
+  background-color: #f2f6ff;
+  margin-left: 30px;
+  border: 2px solid #c4d0eb;
+  border-radius: 8px;
+  min-height: 100vh;
+}
+
+.block-profile__inside {
+  padding: 60px;
+}
+
+.block-profile__spacer {
+  margin-top: 30px;
+  border-bottom: 1px solid #9db0cd;
+}
+
+.block-profile__summary-details {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 300px;
+  position: relative;
+}
+
+.block-profile__summary-details__user-img,
+.block-profile__summary-details__summary-info {
+  flex: 1;
+}
+
+.block-profile__summary-details__summary-info {
+  display: flex;
+  justify-content: space-between;
+  margin-right: 130px;
+}
+
+.summary-details__status {
+  display: flex;
+  flex-direction: column;
+}
+
+.summary-details__status .square {
+  width: 100px;
+  height: 100px;
+  border-radius: 10px;
+}
+
+.summary-details__status:nth-of-type(1) .square {
+  background-color: #bbeef6;
+  opacity: 0.6;
+  border-color: #06d9fa;
+}
+.square {
+  border: 3px solid transparent;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.square .number {
+  font-size: 3.5rem;
+  font-weight: 600;
+}
+
+.summary-details__status:nth-of-type(2) .square {
+  background-color: #fcebb8ec;
+  opacity: 0.7;
+  border-color: #ffbf00;
+}
+
+.summary-details__status:nth-of-type(3) .square {
+  background-color: #d1faa2;
+  opacity: 0.6;
+  border-color: #82eb0b;
+}
+
+.block-profile__summary-details__user-img {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.block-profile__summary-details__user-img img {
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: 0% 0%;
+}
+
+.block-profile__summary-details__user-img .user-name {
+  font-size: 3rem;
+  font-weight: 500;
+  margin-top: 15px;
+}
+
+.edit-btn {
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-size: 2rem;
+  width: 30px;
+  height: 30px;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.edit-btn:hover {
+  transform: scale(1.1);
+}
+
+.summary-details__status .status-text {
+  font-size: 2rem;
+  font-weight: 450;
+  margin-top: 10px;
+}
