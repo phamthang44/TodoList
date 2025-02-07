@@ -4,13 +4,17 @@
  */
 package controller;
 
+import dal.UserDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import model.User;
 
 /**
  *
@@ -57,7 +61,32 @@ public class Home extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.getRequestDispatcher("home.jsp").forward(request, response);
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("account");
+
+        if (user == null) {
+            Cookie[] cookies = request.getCookies();
+            if (cookies != null) {
+                for (Cookie cookie : cookies) {
+                    if (cookie.getName().equals("rememberToken")) {
+                        String token = cookie.getValue();
+                        UserDAO udao = new UserDAO();
+                        user = udao.getUserByToken(token);
+                        if (user != null) {
+                            session.setAttribute("account", user);
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (user == null) {
+            response.sendRedirect("login.jsp");
+        } else {
+            request.getRequestDispatcher("home.jsp").forward(request, response);
+        }
+
     }
 
     /**
@@ -71,7 +100,7 @@ public class Home extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
     }
 
     /**

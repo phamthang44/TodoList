@@ -68,13 +68,13 @@ public class LoginServlet extends HttpServlet {
                 String token = UUID.randomUUID().toString(); //tạo token duy nhất
                 Cookie cookie = new Cookie("rememberToken", token);
                 cookie.setMaxAge(60 * 60 * 24 * 3); //lưu 3 ngày
-                cookie.setHttpOnly(true);
                 response.addCookie(cookie);
+                // Cập nhật token vào database
+                udao.updateRememberToken(user.getId(), token);
             }
             response.sendRedirect("home");
         } else {
             request.setAttribute("invalid", "Username or Password is invalid!");
-            request.setAttribute("invalid2", "invalid");
             request.getRequestDispatcher("login.jsp").forward(request, response);
         }
         

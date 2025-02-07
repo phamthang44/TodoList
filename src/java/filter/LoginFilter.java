@@ -4,6 +4,7 @@
  */
 package filter;
 
+import dal.UserDAO;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
@@ -14,15 +15,18 @@ import jakarta.servlet.FilterConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
+import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import model.User;
 
 /**
  *
  * @author Admin
  */
+@WebFilter(filterName = "LoginFilter", urlPatterns = {"/*"})
 public class LoginFilter implements Filter {
 
     private static final boolean debug = true;
@@ -101,16 +105,37 @@ public class LoginFilter implements Filter {
             FilterChain chain)
             throws IOException, ServletException {
 
-        if (debug) {
-            log("Login:doFilter()");
-        }
-        doBeforeProcessing(request, response);
         HttpServletRequest req = (HttpServletRequest)request;
         HttpServletResponse res = (HttpServletResponse)response;
-        HttpSession session = req.getSession();
-        if (session.getAttribute("account") == null) {
-            res.sendRedirect("login");
+        HttpSession session = req.getSession(false);
+        User user = (session != null) ? (User)session.getAttribute("account") : null;
+        if (user == null) {
+           Cookie[] cookies = req.getCookies();
+           if (cookies != null) {
+               for (Cookie cookie : cookies) {
+                if ("rememberToken".equals(cookie.getName())) {
+                    String token = cookie.getValue();
+                    
+                    // Lấy user từ database dựa vào token
+                    UserDAO udao = new UserDAO();
+                    user = udao.getUserByToken(token);
+
+                    if (user != null) {
+                        session = req.getSession(true); // Tạo session mới
+                        session.setAttribute("account", user);
+                    }
+                    break; // Thoát vòng lặp vì đã tìm thấy token
+                }
+            }
+           }
         }
+        
+       
+        doBeforeProcessing(request, response);
+        
+        
+        
+
         //here
         Throwable problem = null;
         try {

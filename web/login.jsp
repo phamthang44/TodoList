@@ -1,6 +1,6 @@
 <%-- Document : login Created on : Feb 2, 2025, 3:30:30 PM Author : Admin --%>
-<%@page contentType="text/html" pageEncoding="UTF-8"%> <%@taglib prefix="c"
-uri="http://java.sun.com/jsp/jstl/core" %>
+<%@page contentType="text/html" pageEncoding="UTF-8"%> 
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -38,7 +38,7 @@ uri="http://java.sun.com/jsp/jstl/core" %>
         onSubmit=""
       >
         <h1 class="header">Welcome back</h1>
-        <div class="form-group">
+        <div class="form-group ${(requestScope.invalid != null) ? "invalid" : ""}">
           <input
             type="text"
             class="input-form"
@@ -50,7 +50,7 @@ uri="http://java.sun.com/jsp/jstl/core" %>
           <span class="form-message"></span>
         </div>
 
-        <div class="form-group">
+        <div class="form-group ${(requestScope.invalid != null) ? "invalid" : ""}">
           <input
             type="password"
             class="input-form"
@@ -79,6 +79,14 @@ uri="http://java.sun.com/jsp/jstl/core" %>
     </div>
     <script src="${pageContext.request.contextPath}/js/validator.js"></script>
     <script>
+      let invalidMsg = "${(requestScope.invalid != null) ? "The username or password is not correct" : ""}";
+      const formMsg = document.querySelectorAll(".form-message");
+      if (invalidMsg) {
+          formMsg.forEach((msg) => {
+              msg.textContent = invalidMsg;
+          });
+          
+      }
       Validator({
         form: "#form-login",
         formGroupSelector: ".form-group",

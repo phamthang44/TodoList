@@ -4,16 +4,17 @@
  */
 package controller;
 
+import dal.UserDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import java.util.HashSet;
+import model.User;
+
 
 /**
  *
@@ -53,14 +54,20 @@ public class LogoutServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        HttpSession session = request.getSession();
-        if (session.getAttribute("account") != null) {
-            session.removeAttribute("account");
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            User user = (User)session.getAttribute("account");
+            session.invalidate(); // Hủy session
+            if (user != null) {
+                UserDAO udao = new UserDAO();
+                udao.updateRememberToken(user.getId(), null);
+            }
         }
-//        Cookie cookie = new Cookie("rememberToken", "");
-//        cookie.setMaxAge(0);
-//        response.addCookie(cookie);
+        Cookie cookie = new Cookie("rememberToken", "");
+        cookie.setMaxAge(0);
+        response.addCookie(cookie);
         response.sendRedirect("login");
+        
     }
 
     /**

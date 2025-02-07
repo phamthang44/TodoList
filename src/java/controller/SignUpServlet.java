@@ -8,6 +8,7 @@ import dal.UserDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
+
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -57,7 +58,7 @@ public class SignUpServlet extends HttpServlet {
         
         UserDAO udao = new UserDAO();
         
-        if (!udao.checkAndValidateUser(email, username).isEmpty()) {
+        if (udao.checkAndValidateUser(email, username).isEmpty()) {
             User user = new User(
                     udao.getLastInsertId(),
                     username,

@@ -18,7 +18,7 @@ import model.User;
 public class UserDAO extends DatabaseConnection {
 
     public User checkUser(String username, String password) {
-        String sql = "SELECT * FROM Users WHERE Username=? AND Password=?";
+        String sql = "SELECT * FROM Users WHERE `username`=? AND `password`=?";
         User user = null;
         try {
             PreparedStatement st = con.prepareStatement(sql);
@@ -43,8 +43,7 @@ public class UserDAO extends DatabaseConnection {
 
     public int getLastInsertId() {
         String sql = "SELECT LAST_INSERT_ID();";
-        try (PreparedStatement stmt = con.prepareStatement(sql); 
-            ResultSet rs = stmt.executeQuery()) {
+        try (PreparedStatement stmt = con.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
             if (rs.next()) {
                 return rs.getInt(1);
             }
@@ -57,7 +56,7 @@ public class UserDAO extends DatabaseConnection {
     public User getUserById(int userId) {
         // phương thức lấy user bằng ID
 
-        String sql = "SELECT * FROM users WHERE id = ?;";
+        String sql = "SELECT * FROM users WHERE `id` = ?;";
 
         try {
             PreparedStatement st = con.prepareStatement(sql);
@@ -82,7 +81,7 @@ public class UserDAO extends DatabaseConnection {
     }
 
     public void createUser(User user) {
-        String sql = "INSERT INTO users (name, email, password) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO `users` (`username`, `email`, `password`) VALUES (?, ?, ?);";
         try {
             PreparedStatement st = con.prepareStatement(sql);
             st.setString(1, user.getUsername());
@@ -91,6 +90,7 @@ public class UserDAO extends DatabaseConnection {
             st.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
+            e.getSQLState();
         }
     }
 
@@ -98,7 +98,7 @@ public class UserDAO extends DatabaseConnection {
     //servlet đó sẽ tạo object User bằng việc nhận dữ liệu từ form chỉnh sửa
     //gọi UserDAO ném vào ( User ) tương tự hàm tạo
     public void updateUser(User user) {
-        String sql = "UPDATE users SET username = ?, emai = ?, password = ? WHERE id = ?";
+        String sql = "UPDATE `users` SET `username` = ?, `email` = ?, `password` = ? WHERE `id` = ?";
         try {
             PreparedStatement st = con.prepareStatement(sql);
             st.setString(1, user.getUsername());
@@ -112,7 +112,7 @@ public class UserDAO extends DatabaseConnection {
     }
 
     public void deleteUser(int userId) {
-        String sql = "DELETE FROM users WHERE id = ?";
+        String sql = "DELETE FROM `users` WHERE `id` = ?";
         try {
             PreparedStatement st = con.prepareStatement(sql);
             st.setInt(1, userId);
@@ -127,7 +127,7 @@ public class UserDAO extends DatabaseConnection {
         boolean flag = false;
         String[] invalid = {"admin", "ADMIN", "Admin", "aDmin", "adMin", "admIn", "admiN"};
         for (String string : invalid) {
-            if(string.equalsIgnoreCase("admin")) {
+            if (string.equalsIgnoreCase("admin")) {
                 flag = true;
             }
         }
@@ -135,7 +135,7 @@ public class UserDAO extends DatabaseConnection {
     } //!(false) -> true ngược lại !(true) -> false
 
     public List<User> checkAndValidateUser(String email, String username) {
-        String sql = "SELECT * FROM users WHERE email=? AND username=?";
+        String sql = "SELECT * FROM users WHERE `email`=? AND `username`=?";
         List<User> existedEmailUsers = new ArrayList<>();
         boolean flag = isValidUsername(username);
         if (flag) {
@@ -160,5 +160,30 @@ public class UserDAO extends DatabaseConnection {
             }
         }
         return existedEmailUsers;
+    }
+
+    public void updateRememberToken(int userId, String token) {
+        String sql = "UPDATE `users` SET `remember_token` = ? WHERE `id` = ?";
+        try (PreparedStatement stmt = con.prepareStatement(sql)) {
+            stmt.setString(1, token);
+            stmt.setInt(2, userId);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public User getUserByToken(String token) {
+        String sql = "SELECT * FROM `users` WHERE `remember_token` = ?";
+        try (PreparedStatement stmt = con.prepareStatement(sql)) {
+            stmt.setString(1, token);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return new User(rs.getInt("id"), rs.getString("username"), rs.getString("email"), rs.getString("password"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
