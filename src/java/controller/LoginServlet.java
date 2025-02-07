@@ -9,18 +9,19 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import model.User;
-
+import java.util.UUID;
 /**
  *
  * @author Admin
  */
-@WebServlet(name = "Login", urlPatterns = {"/login"})
-public class Login extends HttpServlet {
+
+public class LoginServlet extends HttpServlet {
 
     
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
@@ -46,21 +47,32 @@ public class Login extends HttpServlet {
         request.getRequestDispatcher("login.jsp").forward(request, response);
     }
 
- 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String username = request.getParameter("username");
         String password= request.getParameter("password");
-        
+        //cần thêm validate phòng trường hợp nó ném sql vào hoặc kí tự không phù hợp
+        // ....
+        //.........
+        //
+        String rem = request.getParameter("remember");
         UserDAO udao = new UserDAO();
         User user = udao.checkUser(username, password);
-
+        
         if (user != null) {
             //giờ viết logic ném username, id sang bên trang home.jsp để bên đó nhận id
             HttpSession session = request.getSession();
             session.setAttribute("account", user);
-            response.sendRedirect("home.jsp");
+            
+            if (rem != null) {
+                String token = UUID.randomUUID().toString(); //tạo token duy nhất
+                Cookie cookie = new Cookie("rememberToken", token);
+                cookie.setMaxAge(60 * 60 * 24 * 3); //lưu 3 ngày
+                cookie.setHttpOnly(true);
+                response.addCookie(cookie);
+            }
+            response.sendRedirect("home");
         } else {
             request.setAttribute("invalid", "Username or Password is invalid!");
             request.setAttribute("invalid2", "invalid");

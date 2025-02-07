@@ -8,7 +8,7 @@ uri="http://java.sun.com/jsp/jstl/core" %>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Login Page</title>
     <!-- reset css -->
-    <link rel="stylesheet" href="./assets/css/reset.css" />
+    <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/reset.css" />
     <!-- Font -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -17,7 +17,10 @@ uri="http://java.sun.com/jsp/jstl/core" %>
       rel="stylesheet"
     />
 
-    <link rel="stylesheet" href="./assets/css/login.css" />
+    <link
+      rel="stylesheet"
+      href="<%= request.getContextPath() %>/assets/css/login.css"
+    />
 
     <!-- Fontawesome -->
     <script
@@ -66,7 +69,7 @@ uri="http://java.sun.com/jsp/jstl/core" %>
             type="checkbox"
             name="remember"
             class="remember"
-            value="check"
+            value="yes"
             id="remember-me"
           />
           <label for="remember-me">Remember me?</label>

@@ -7,6 +7,8 @@ package dal;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import model.User;
 
 /**
@@ -38,13 +40,24 @@ public class UserDAO extends DatabaseConnection {
 
         return user;
     }
-    
-    
+
+    public int getLastInsertId() {
+        String sql = "SELECT LAST_INSERT_ID();";
+        try (PreparedStatement stmt = con.prepareStatement(sql); 
+            ResultSet rs = stmt.executeQuery()) {
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
+
     public User getUserById(int userId) {
         // phương thức lấy user bằng ID
-        
+
         String sql = "SELECT * FROM users WHERE id = ?;";
-        
 
         try {
             PreparedStatement st = con.prepareStatement(sql);
@@ -53,12 +66,12 @@ public class UserDAO extends DatabaseConnection {
             if (rs.next()) {
                 // Tạo đối tượng User từ dữ liệu trong ResultSet
                 User user = new User(
-                        rs.getInt("id"), 
+                        rs.getInt("id"),
                         rs.getString("username"),
-                        rs.getString("email"), 
-                        rs.getString("password") 
+                        rs.getString("email"),
+                        rs.getString("password")
                 );
-               
+
                 return user; // Trả về đối tượng User
             }
         } catch (SQLException e) {
@@ -67,8 +80,7 @@ public class UserDAO extends DatabaseConnection {
 
         return null;
     }
-    
-    
+
     public void createUser(User user) {
         String sql = "INSERT INTO users (name, email, password) VALUES (?, ?, ?)";
         try {
@@ -81,6 +93,7 @@ public class UserDAO extends DatabaseConnection {
             e.printStackTrace();
         }
     }
+
     //hàm này sẽ được gọi bởi servlet update user trong 1 trang update thông tin
     //servlet đó sẽ tạo object User bằng việc nhận dữ liệu từ form chỉnh sửa
     //gọi UserDAO ném vào ( User ) tương tự hàm tạo
@@ -97,7 +110,7 @@ public class UserDAO extends DatabaseConnection {
             e.printStackTrace();
         }
     }
-    
+
     public void deleteUser(int userId) {
         String sql = "DELETE FROM users WHERE id = ?";
         try {
@@ -107,7 +120,45 @@ public class UserDAO extends DatabaseConnection {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        
-        
+
+    }
+
+    public boolean isValidUsername(String username) {
+        boolean flag = false;
+        String[] invalid = {"admin", "ADMIN", "Admin", "aDmin", "adMin", "admIn", "admiN"};
+        for (String string : invalid) {
+            if(string.equalsIgnoreCase("admin")) {
+                flag = true;
+            }
+        }
+        return !("admin".equalsIgnoreCase(username) || flag);
+    } //!(false) -> true ngược lại !(true) -> false
+
+    public List<User> checkAndValidateUser(String email, String username) {
+        String sql = "SELECT * FROM users WHERE email=? AND username=?";
+        List<User> existedEmailUsers = new ArrayList<>();
+        boolean flag = isValidUsername(username);
+        if (flag) {
+            try {
+                PreparedStatement st = con.prepareStatement(sql);
+                st.setString(1, email);
+                st.setString(2, username);
+                ResultSet rs = st.executeQuery();
+                User user;
+                while (rs.next()) {
+                    user = new User(
+                            rs.getInt("id"),
+                            rs.getString("username"),
+                            rs.getString("email"),
+                            rs.getString("password")
+                    );
+                    existedEmailUsers.add(user);
+                }
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return existedEmailUsers;
     }
 }

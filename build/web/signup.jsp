@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Signup Page</title>
     <!-- reset css -->
-    <link rel="stylesheet" href="./assets/css/reset.css" />
+    <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/reset.css" />
     <!-- Font -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -16,7 +16,7 @@
       rel="stylesheet"
     />
 
-    <link rel="stylesheet" href="./assets/css/login.css" />
+    <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/login.css" />
 
     <!-- Fontawesome -->
     <script
@@ -33,15 +33,16 @@
           impedit.
         </p>
 
-        <div class="form-group">
+        <div class="form-group ${(requestScope.invalid != null) ? "invalid" : ""}">
           <input
             type="text"
             class="input-form"
             placeholder="Username"
             id="username"
+            name="username"
             autocomplete="off"
           />
-          <span class="form-message"></span>
+          <span class="form-message">${requestScope.invalid}</span>
         </div>
         <div class="form-group">
           <input
@@ -49,6 +50,7 @@
             class="input-form"
             placeholder="Email"
             id="email"
+            name="email"
             autocomplete="off"
           />
           <span class="form-message"></span>
