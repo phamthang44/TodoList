@@ -21,14 +21,16 @@
                 <th>Title</th>
                 <th>User ID</th>
             </tr>
-            <c:forEach var="todo" items="${todoList}">
+            <c:forEach var="todo" items="${sessionScope.todoList}">
                 <tr>
                     <td>${todo.id}</td>
                     <td>${todo.name}</td>
                     <td>${todo.userId}</td>
+                    <td><a href="home?todolist_id=${todo.id}">Click here to watch more details</a></td>
                 </tr>
             </c:forEach>
+            
         </table>
-        <a href="home">Click here to back to home</a>
+        
     </body>
 </html>

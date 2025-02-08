@@ -1,4 +1,8 @@
 <%-- Document : home Created on : Feb 2, 2025, 3:34:06 PM Author : Admin --%>
+<%@page import="model.Todolist"%>
+<%@page import="dal.TodolistDAO"%>
+<%@page import="model.Task"%>
+<%@page import="java.util.List"%>
 <%@page import="model.User"%> <%@page contentType="text/html"
 pageEncoding="UTF-8"%> <%@taglib prefix="c"
 uri="http://java.sun.com/jsp/jstl/core" %>
@@ -35,7 +39,10 @@ uri="http://java.sun.com/jsp/jstl/core" %>
     ></script>
   </head>
   <body>
-    <% User user = (User) session.getAttribute("account");%>
+    <% 
+        User user = (User)session.getAttribute("account");
+
+    %>
     <div class="container">
       <div class="sidebar">
         <div class="menu-btn">
@@ -130,7 +137,18 @@ uri="http://java.sun.com/jsp/jstl/core" %>
             <div class="horizontal-line"></div>
             <div class="body-dashboard">
               <div class="box">
-                <h1 class="title">My Todo</h1>
+                  <% 
+                        Todolist todo = (Todolist) session.getAttribute("todoList");
+                        if (todo != null) { 
+                  %>
+                <h1 class="title"><%= todo.getName() %></h1>
+                <%
+                    } else {
+                %>
+                <h1 class="title">No todo found</h1>
+                <%
+                    }
+                %>
                 <div class="combo-user">
                   <a class="btn">
                     <i class="add fa-solid fa-plus"></i>

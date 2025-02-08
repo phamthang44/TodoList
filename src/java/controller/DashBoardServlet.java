@@ -68,7 +68,7 @@ public class DashBoardServlet extends HttpServlet {
             TodolistDAO tododao = new TodolistDAO();
             List<Todolist> list = tododao.getTodoListsByUserId(user.getId());
             
-            request.setAttribute("todoList", list);
+            session.setAttribute("todoList", list);
         }
         
         request.getRequestDispatcher("dashboard.jsp").forward(request, response);

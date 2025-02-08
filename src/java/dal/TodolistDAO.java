@@ -79,8 +79,8 @@ public class TodolistDAO extends DatabaseConnection {
             if (rs.next()) {
                 todo = new Todolist();
                 todo.setId(rs.getInt("id"));
-                todo.setName(rs.getString("name"));
                 todo.setUserId(rs.getInt("user_id"));
+                todo.setName(rs.getString("name"));
             }
         } catch (SQLException e) {
             e.printStackTrace();
