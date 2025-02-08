@@ -1,7 +1,7 @@
 <%-- Document : home Created on : Feb 2, 2025, 3:34:06 PM Author : Admin --%>
-<%@page import="model.User"%> 
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@page import="model.User"%> <%@page contentType="text/html"
+pageEncoding="UTF-8"%> <%@taglib prefix="c"
+uri="http://java.sun.com/jsp/jstl/core" %>
 
 <!DOCTYPE html>
 <html>
@@ -47,7 +47,7 @@
           </div>
           <div class="user-details">
             <p class="title">Web Developer</p>
-            <p class="name"><%= user.getUsername()%></p>
+            <p class="name"><%= user.getUsername() %></p>
           </div>
         </div>
         <div class="nav">
@@ -55,7 +55,7 @@
             <p class="title">Main</p>
             <ul>
               <li>
-                <a href="#">
+                <a href="dashboard">
                   <i class="icon fa-solid fa-house"></i>
                   <span class="text">Dash board</span>
                 </a>
@@ -183,93 +183,45 @@
           <div class="block__dashboardshow">
             <div class="block__tostart">
               <p class="state">To start</p>
-              <div class="tasks">
-                <div class="task-card">
-                  <div class="task-header">
-                    <h3 class="task-title">Task 1</h3>
-                    <button class="task-options-btn">
-                      <i class="fa fa-ellipsis-h"></i>
-                      <!-- Nút 3 chấm -->
-                    </button>
+              <ul class="tasks">
+                <li class="task-item">
+                  <div class="task-card">
+                    <div class="task-header">
+                      <h3 class="task-title">Task 1</h3>
+                      <button class="task-options-btn">
+                        <i class="fa fa-ellipsis-h"></i>
+                        <!-- Nút 3 chấm -->
+                      </button>
+                      <div class="options-menu">
+                        <ul>
+                          <li><button class="edit">Edit Task</button></li>
+                          <li><button class="edit">Delete Task</button></li>
+                        </ul>
+                      </div>
+                    </div>
+
+                    <p class="desc">
+                      Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                      Expedita eligendi assumenda laudantium explicabo
+                      similique. Esse doloribus iste eligendi nam. Consequatur
+                      quidem libero expedita, quisquam nemo maxime! Quos,
+                      architecto dignissimos nesciunt ea iste dicta inventore.
+                      Laboriosam ut dolore dolores reiciendis nam voluptates!
+                      Suscipit a magni sint voluptatibus similique, sed id
+                      reprehenderit!
+                    </p>
+                    <p class="due-date">11/11/2025</p>
                   </div>
-                  <div class="options-menu">
-                    <ul>
-                      <li>Edit Task</li>
-                      <li>Delete Task</li>
-                    </ul>
-                  </div>
-                  <p class="desc">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                    Expedita eligendi assumenda laudantium explicabo similique.
-                    Esse doloribus iste eligendi nam. Consequatur quidem libero
-                    expedita, quisquam nemo maxime! Quos, architecto dignissimos
-                    nesciunt ea iste dicta inventore. Laboriosam ut dolore
-                    dolores reiciendis nam voluptates! Suscipit a magni sint
-                    voluptatibus similique, sed id reprehenderit!
-                  </p>
-                  <p class="due-date">11/11/2025</p>
-                </div>
-              </div>
+                </li>
+              </ul>
             </div>
             <div class="block__inprogress">
               <p class="state">In progress</p>
-              <div class="tasks">
-                <div class="task-card">
-                  <div class="task-header">
-                    <h3 class="task-title">Task 1</h3>
-                    <button class="task-options-btn">
-                      <i class="fa fa-ellipsis-h"></i>
-                      <!-- Nút 3 chấm -->
-                    </button>
-                  </div>
-                  <div class="options-menu">
-                    <ul>
-                      <li>Edit Task</li>
-                      <li>Delete Task</li>
-                    </ul>
-                  </div>
-                  <p class="desc">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                    Expedita eligendi assumenda laudantium explicabo similique.
-                    Esse doloribus iste eligendi nam. Consequatur quidem libero
-                    expedita, quisquam nemo maxime! Quos, architecto dignissimos
-                    nesciunt ea iste dicta inventore. Laboriosam ut dolore
-                    dolores reiciendis nam voluptates! Suscipit a magni sint
-                    voluptatibus similique, sed id reprehenderit!
-                  </p>
-                  <p class="due-date">11/11/2025</p>
-                </div>
-              </div>
+              <ul class="tasks"></ul>
             </div>
             <div class="block__done">
               <p class="state">Done</p>
-              <div class="tasks">
-                <div class="task-card">
-                  <div class="task-header">
-                    <h3 class="task-title">Task 1</h3>
-                    <button class="task-options-btn">
-                      <i class="fa fa-ellipsis-h"></i>
-                      <!-- Nút 3 chấm -->
-                    </button>
-                  </div>
-                  <div class="options-menu">
-                    <ul>
-                      <li>Edit Task</li>
-                      <li>Delete Task</li>
-                    </ul>
-                  </div>
-                  <p class="desc">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                    Expedita eligendi assumenda laudantium explicabo similique.
-                    Esse doloribus iste eligendi nam. Consequatur quidem libero
-                    expedita, quisquam nemo maxime! Quos, architecto dignissimos
-                    nesciunt ea iste dicta inventore. Laboriosam ut dolore
-                    dolores reiciendis nam voluptates! Suscipit a magni sint
-                    voluptatibus similique, sed id reprehenderit!
-                  </p>
-                  <p class="due-date">11/11/2025</p>
-                </div>
-              </div>
+              <ul class="tasks"></ul>
             </div>
           </div>
         </div>

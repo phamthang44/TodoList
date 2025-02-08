@@ -24,7 +24,7 @@ taskCards.forEach((taskCard) => {
     // Nếu nhấn vào nút ba chấm
     if (e.target.closest(".task-options-btn")) {
       // Đóng tất cả các menu khác
-      $(".task-card .options-menu").not(menu).removeClass("active");
+      $(".task-item .task-card .options-menu").not(menu).removeClass("active");
 
       // Toggle (mở/đóng) menu của task hiện tại
       menu.toggleClass("active");
@@ -34,6 +34,29 @@ taskCards.forEach((taskCard) => {
     }
   };
 });
+// $(document).ready(function () {
+//   $(".task-options-btn").on("click", function (e) {
+//     e.stopPropagation(); // Ngăn chặn sự kiện lan ra ngoài
+
+//     const menu = $(this).siblings(".options-menu");
+
+//     // Đóng tất cả các menu khác trước khi mở cái mới
+//     $(".options-menu").not(menu).removeClass("active");
+
+//     // Toggle menu của task hiện tại
+//     menu.toggleClass("active");
+//   });
+
+//   // Khi click ra ngoài thì ẩn menu
+//   $(document).on("click", function () {
+//     $(".options-menu").removeClass("active");
+//   });
+
+//   // Ngăn menu bị ẩn khi click vào chính nó
+//   $(".options-menu").on("click", function (e) {
+//     e.stopPropagation();
+//   });
+// });
 
 // async function loadTasks() {
 //   try {

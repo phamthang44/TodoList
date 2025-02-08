@@ -12,8 +12,8 @@ public class Task {
     private String status;
     private String priority;
     private LocalDate dueDate; // Sử dụng LocalDate cho ngày (chỉ ngày, không có thời gian)
-    private LocalDateTime createAt; // Sử dụng LocalDateTime cho ngày giờ
-    private LocalDateTime updateAt; // Sử dụng LocalDateTime cho ngày giờ
+    private LocalDate createAt; // Sử dụng LocalDateTime cho ngày giờ
+    private LocalDate updateAt; // Sử dụng LocalDateTime cho ngày giờ
 
 
     // Constructor mặc định
@@ -21,7 +21,7 @@ public class Task {
 
     // Constructor đầy đủ
     public Task(int id, User user, Todolist todolist, String title, String description,
-                String status, String priority, LocalDate dueDate, LocalDateTime createAt, LocalDateTime updateAt) {
+                String status, String priority, LocalDate dueDate, LocalDate createAt, LocalDate updateAt) {
         this.id = id;
         this.user = user;
         this.todolist = todolist;
@@ -99,19 +99,19 @@ public class Task {
         this.dueDate = dueDate;
     }
 
-    public LocalDateTime getCreateAt() {
+    public LocalDate getCreateAt() {
         return createAt;
     }
 
-    public void setCreateAt(LocalDateTime createAt) {
+    public void setCreateAt(LocalDate createAt) {
         this.createAt = createAt;
     }
 
-    public LocalDateTime getUpdateAt() {
+    public LocalDate getUpdateAt() {
         return updateAt;
     }
 
-    public void setUpdateAt(LocalDateTime updateAt) {
+    public void setUpdateAt(LocalDate updateAt) {
         this.updateAt = updateAt;
     }
 }

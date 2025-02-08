@@ -4,24 +4,25 @@
  */
 package controller;
 
-import dal.UserDAO;
+import dal.TodolistDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.util.List;
+import model.Todolist;
 import model.User;
 
 /**
  *
  * @author Admin
  */
-@WebServlet(name = "Home", urlPatterns = {"/home"})
-public class Home extends HttpServlet {
+@WebServlet(name = "DashBoardServlet", urlPatterns = {"/dashboard"})
+public class DashBoardServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -40,10 +41,10 @@ public class Home extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet Home</title>");
+            out.println("<title>Servlet DashBoardServlet</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet Home at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet DashBoardServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -62,31 +63,15 @@ public class Home extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
-        User user = (User) session.getAttribute("account");
-
-        if (user == null) {
-            Cookie[] cookies = request.getCookies();
-            if (cookies != null) {
-                for (Cookie cookie : cookies) {
-                    if (cookie.getName().equals("rememberToken")) {
-                        String token = cookie.getValue();
-                        UserDAO udao = new UserDAO();
-                        user = udao.getUserByToken(token);
-                        if (user != null) {
-                            session.setAttribute("account", user);
-                        }
-                        break;
-                    }
-                }
-            }
+        User user = (User)session.getAttribute("account");
+        if (user != null) {
+            TodolistDAO tododao = new TodolistDAO();
+            List<Todolist> list = tododao.getTodoListsByUserId(user.getId());
+            
+            request.setAttribute("todoList", list);
         }
-
-        if (user == null) {
-            response.sendRedirect("login");
-        } else {
-            request.getRequestDispatcher("home.jsp").forward(request, response);
-        }
-
+        
+        request.getRequestDispatcher("dashboard.jsp").forward(request, response);
     }
 
     /**
@@ -100,7 +85,7 @@ public class Home extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
+        processRequest(request, response);
     }
 
     /**

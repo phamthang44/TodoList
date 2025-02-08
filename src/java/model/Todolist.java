@@ -13,7 +13,7 @@ import java.util.List;
 
 public class Todolist {
     private int id;
-    private int user_id; 
+    private int userId; 
     private String name;
     private List<Task> tasks; // Danh sách task thuộc dự án này
 
@@ -21,9 +21,9 @@ public class Todolist {
     public Todolist() {}
 
     // Constructor có tham số
-    public Todolist(int id, int user_id, String name) {
+    public Todolist(int id, int userId, String name) {
         this.id = id;
-        this.user_id = user_id;
+        this.userId = userId;
         this.name = name;
     }
 
@@ -51,11 +51,11 @@ public class Todolist {
     }
 
     public int getUserId() {
-        return user_id;
+        return userId;
     }
 
-    public void setUserId(int user_id) {
-        this.user_id = user_id;
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
     public void setTasks(List<Task> tasks) {

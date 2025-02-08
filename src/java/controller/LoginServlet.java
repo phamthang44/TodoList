@@ -72,7 +72,7 @@ public class LoginServlet extends HttpServlet {
                 // Cập nhật token vào database
                 udao.updateRememberToken(user.getId(), token);
             }
-            response.sendRedirect("home");
+            response.sendRedirect("dashboard");
         } else {
             request.setAttribute("invalid", "Username or Password is invalid!");
             request.getRequestDispatcher("login.jsp").forward(request, response);

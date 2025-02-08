@@ -10,7 +10,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import model.Todolist;
 
 
@@ -21,7 +20,7 @@ import model.Todolist;
 public class TodolistDAO extends DatabaseConnection {
     public List<Todolist> getTodoListsByUserId(int userId) {
         List<Todolist> list = new ArrayList<>();
-        String sql = "SELECT * FROM todolists WHERE user_id = ?";
+        String sql = "SELECT * FROM todolists WHERE `user_id` = ?";
         try {
             PreparedStatement st = con.prepareStatement(sql);
             st.setInt(1, userId);
@@ -47,7 +46,7 @@ public class TodolistDAO extends DatabaseConnection {
     }
     
     public List<Todolist> getTodolistsByName(String name) {
-        String sql = "SELECT * FROM todolists WHERE name=?";
+        String sql = "SELECT * FROM todolists WHERE `name`=?";
         Todolist todo = null;
         List<Todolist> list = new ArrayList<>();
         try {
@@ -71,7 +70,7 @@ public class TodolistDAO extends DatabaseConnection {
     }
     
     public Todolist getTodolistById(int id) {
-        String sql = "SELECT * FROM todolists WHERE id=?";
+        String sql = "SELECT * FROM todolists WHERE `id`=?";
         Todolist todo = null;
         try {
             PreparedStatement st = con.prepareStatement(sql);
@@ -90,7 +89,7 @@ public class TodolistDAO extends DatabaseConnection {
     }
     
     public void createTodolist(Todolist todo) {
-        String sql = "INSERT INTO todolists (user_id, name) VALUES(?, ?)";
+        String sql = "INSERT INTO `todolists` (`user_id`, `name`) VALUES(?, ?)";
         try {
             PreparedStatement st = con.prepareStatement(sql);
             st.setInt(1, todo.getUserId());
@@ -102,7 +101,7 @@ public class TodolistDAO extends DatabaseConnection {
     }
     
     public void deleteTodolist(int todo_id) {
-        String sql = "DELETE FROM todolists WHERE id=?";
+        String sql = "DELETE FROM `todolists` WHERE `id`=?";
         try {
             PreparedStatement st = con.prepareStatement(sql);
             st.setInt(1, todo_id);
@@ -113,7 +112,7 @@ public class TodolistDAO extends DatabaseConnection {
     }
     
     public void updateTodolist(Todolist todolist) {
-        String sql = "UPDATE todolists SET name = ? WHERE id = ?";
+        String sql = "UPDATE `todolists` SET `name` = ? WHERE `id` = ?";
         try {
             int id = todolist.getId();
             PreparedStatement st = con.prepareStatement(sql);
