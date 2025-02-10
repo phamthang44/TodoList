@@ -101,66 +101,51 @@ public class LoginFilter implements Filter {
      * @exception IOException if an input/output error occurs
      * @exception ServletException if a servlet error occurs
      */
-    public void doFilter(ServletRequest request, ServletResponse response,
-            FilterChain chain)
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
 
-        HttpServletRequest req = (HttpServletRequest)request;
-        HttpServletResponse res = (HttpServletResponse)response;
-        HttpSession session = req.getSession(false);
-        User user = (session != null) ? (User)session.getAttribute("account") : null;
-        if (user == null) {
-           Cookie[] cookies = req.getCookies();
-           if (cookies != null) {
-               for (Cookie cookie : cookies) {
-                if ("rememberToken".equals(cookie.getName())) {
-                    String token = cookie.getValue();
-                    
-                    // Lấy user từ database dựa vào token
-                    UserDAO udao = new UserDAO();
-                    user = udao.getUserByToken(token);
+        HttpServletRequest req = (HttpServletRequest) request;
+        HttpServletResponse res = (HttpServletResponse) response;
+        HttpSession session = req.getSession(false); //tạo session mà ko new mới
 
-                    if (user != null) {
-                        session = req.getSession(true); // Tạo session mới
-                        session.setAttribute("account", user);
+        String uri = req.getRequestURI();
+
+        // Chặn truy cập trực tiếp vào file .jsp, trừ login.jsp
+        if (uri.endsWith(".jsp") && !uri.contains("login.jsp")) {
+            res.sendRedirect(req.getContextPath() + "/login");
+            return;
+        }
+
+        User user = (session != null) ? (User) session.getAttribute("account") : null;
+
+        // Nếu user chưa đăng nhập, kiểm tra Remember Me
+        if (user == null) {
+            Cookie[] cookies = req.getCookies();
+            if (cookies != null) {
+                for (Cookie cookie : cookies) {
+                    if ("rememberToken".equals(cookie.getName())) {
+                        String token = cookie.getValue();
+                        UserDAO udao = new UserDAO();
+                        user = udao.getUserByToken(token);
+
+                        if (user != null) {
+                            session = req.getSession(true); // Tạo session mới
+                            session.setAttribute("account", user);
+                        }
+                        break;
                     }
-                    break; // Thoát vòng lặp vì đã tìm thấy token
                 }
             }
-           }
-        }
-        
-       
-        doBeforeProcessing(request, response);
-        
-        
-        
-
-        //here
-        Throwable problem = null;
-        try {
-            chain.doFilter(request, response);
-        } catch (Throwable t) {
-            // If an exception is thrown somewhere down the filter chain,
-            // we still want to execute our after processing, and then
-            // rethrow the problem after that.
-            problem = t;
-            t.printStackTrace();
         }
 
-        doAfterProcessing(request, response);
-
-        // If there was a problem, we want to rethrow it if it is
-        // a known type, otherwise log it.
-        if (problem != null) {
-            if (problem instanceof ServletException) {
-                throw (ServletException) problem;
-            }
-            if (problem instanceof IOException) {
-                throw (IOException) problem;
-            }
-            sendProcessingError(problem, response);
+        // Nếu vẫn chưa có user, chuyển hướng về login
+        if (user == null && !uri.contains("login")) {
+            res.sendRedirect(req.getContextPath() + "/login");
+            return;
         }
+
+        // Tiếp tục chuỗi filter
+        chain.doFilter(request, response);
     }
 
     /**

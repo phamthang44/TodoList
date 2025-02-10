@@ -123,4 +123,29 @@ public class TodolistDAO extends DatabaseConnection {
             e.printStackTrace();
         }
     }
+    
+    public boolean isUserOwnerOfTodo(int userId, int todoId) {
+        UserDAO udao = new UserDAO();
+        
+        boolean isUserId = udao.isUserId(userId);
+        boolean isTodoId = isTodoHasUserId(userId);
+        
+        return isUserId && isTodoId;
+    }
+    
+    private boolean isTodoHasUserId (int userId) {
+        String sql = "SELECT * FROM `todolists` WHERE `user_id`=?";
+        try (PreparedStatement st = con.prepareStatement(sql)){
+            st.setInt(1, userId);
+            ResultSet rs = st.executeQuery();
+            if (rs.next()) {
+                Todolist todo = new Todolist(rs.getInt("id"), rs.getInt("user_id"), rs.getString("name"));
+                if (todo != null) return true;
+            }
+               
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 }

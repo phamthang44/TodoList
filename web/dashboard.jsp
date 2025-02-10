@@ -4,6 +4,7 @@
     Author     : Admin
 --%>
 
+<%@page import="model.User"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
@@ -13,7 +14,12 @@
         <title>Dash board</title>
     </head>
     <body>
-        <h1>Hello World!</h1>
+        <%
+         User user = (User) session.getAttribute("account");
+        
+        %>
+        
+        <h1>Welcome back <%= user.getUsername() %></h1>
 
         <table border="1">
             <tr>

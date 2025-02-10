@@ -15,95 +15,145 @@ $(".menu-btn").click(function () {
   $(".sidebar").toggleClass("active");
 });
 
-const taskCards = document.querySelectorAll(".task-card"); // Chọn tất cả các .task-card
+let tasks = [];
 
-taskCards.forEach((taskCard) => {
-  taskCard.onclick = function (e) {
-    const menu = $(this).find(".options-menu");
+async function fetchTasks() {
+  try {
+    const response = await fetch(contextPath + `/tasks`);
+    tasks = await response.json();
+    console.log(tasks);
 
-    // Nếu nhấn vào nút ba chấm
-    if (e.target.closest(".task-options-btn")) {
-      // Đóng tất cả các menu khác
-      $(".task-item .task-card .options-menu").not(menu).removeClass("active");
+    // Lọc từng nhóm theo status
+    let toStart = tasks.filter((task) => task.status === "Pending");
+    let inProgress = tasks.filter((task) => task.status === "In Progress");
+    let done = tasks.filter((task) => task.status === "Done");
 
-      // Toggle (mở/đóng) menu của task hiện tại
-      menu.toggleClass("active");
-    } else {
-      // Nếu nhấn vào vùng ngoài nút ba chấm, ẩn menu
-      menu.removeClass("active");
-    }
-  };
+    renderTasks(".block__tostart.tasks", toStart);
+    renderTasks(".block__inprogress.tasks", inProgress);
+    renderTasks(".block__done.tasks", done);
+  } catch (error) {}
+}
+
+function renderTasks(containerClass, tasks) {
+  let container = document.querySelector(containerClass);
+
+  container.innerHTML = "";
+
+  tasks.forEach((task) => {
+    const li = document.createElement("li");
+    li.classList.add("task-item");
+    li.innerHTML = `<div class="task-card" draggable="true" data-id=${task.id}>
+                    <div class="task-header">
+                      <h3 class="task-title">${task.title}</h3>
+                      <button class="task-options-btn">
+                        <i class="fa fa-ellipsis-h"></i>
+                      </button>
+                      <div class="options-menu">
+                        <ul>
+                          <li><button class="edit">Edit Task</button></li>
+                          <li><button class="edit">Delete Task</button></li>
+                        </ul>
+                      </div>
+                    </div>
+                    <p class="desc">
+                      ${task.description}
+                      
+                    </p>
+                    <p class="date create-date">Created at : ${task.createAt}</p>
+                    <p class="date due-date">Due date : ${task.dueDate}</p>
+                    <p class="date update-date">Updated at : ${task.updateAt}</p>
+                  </div>`;
+    container.appendChild(li);
+  });
+  const taskCards = document.querySelectorAll(".task-card"); // Chọn tất cả các .task-card
+
+  taskCards.forEach((taskCard) => {
+    taskCard.onclick = function (e) {
+      const menu = $(this).find(".options-menu");
+
+      // Nếu nhấn vào nút ba chấm
+      if (e.target.closest(".task-options-btn")) {
+        // Đóng tất cả các menu khác
+        $(".task-item .task-card .options-menu")
+          .not(menu)
+          .removeClass("active");
+
+        // Toggle (mở/đóng) menu của task hiện tại
+        menu.toggleClass("active");
+      } else {
+        // Nếu nhấn vào vùng ngoài nút ba chấm, ẩn menu
+        menu.removeClass("active");
+      }
+    };
+  });
+}
+
+// Lấy `todolist_id` từ URL
+
+fetchTasks();
+
+document.addEventListener("DOMContentLoaded", function () {
+  let draggedTask = null;
+
+  // 1️⃣ Xử lý kéo
+  document.querySelectorAll(".task-card").forEach((task) => {
+    task.setAttribute("draggable", true); // Đảm bảo có thể kéo
+    task.addEventListener("dragstart", function (event) {
+      draggedTask = this;
+      event.dataTransfer.setData("text/plain", this.getAttribute("data-id"));
+      setTimeout(() => (this.style.opacity = "0.5"), 0);
+    });
+
+    task.addEventListener("dragend", function () {
+      this.style.opacity = "1";
+    });
+  });
+
+  // 2️⃣ Xử lý vùng dropzone
+  document.querySelectorAll(".dropzone").forEach((zone) => {
+    zone.addEventListener("dragover", function (event) {
+      event.preventDefault();
+      this.style.backgroundColor = "#f0f0f0";
+    });
+
+    zone.addEventListener("dragleave", function () {
+      this.style.backgroundColor = "";
+    });
+
+    zone.addEventListener("drop", function (event) {
+      event.preventDefault();
+      this.style.backgroundColor = "";
+
+      if (draggedTask) {
+        this.appendChild(draggedTask); // Chuyển task vào cột mới
+
+        let taskId = draggedTask.getAttribute("data-id");
+        let newStatus =
+          this.closest("div").querySelector("p.state").textContent; // Lấy tên trạng thái
+
+        updateTaskStatus(taskId, newStatus); // Cập nhật dữ liệu
+      }
+    });
+  });
 });
-// $(document).ready(function () {
-//   $(".task-options-btn").on("click", function (e) {
-//     e.stopPropagation(); // Ngăn chặn sự kiện lan ra ngoài
 
-//     const menu = $(this).siblings(".options-menu");
+// 3️⃣ Hàm cập nhật trạng thái trong dữ liệu
+function updateTaskStatus(taskId, newStatus) {
+  taskId = parseInt(taskId);
+  let task = tasks.find((t) => t.id === taskId);
+  console.log(task);
+  if (task) {
+    task.status = newStatus;
+    console.log(`✅ Cập nhật Task ${taskId} -> ${newStatus}`);
 
-//     // Đóng tất cả các menu khác trước khi mở cái mới
-//     $(".options-menu").not(menu).removeClass("active");
-
-//     // Toggle menu của task hiện tại
-//     menu.toggleClass("active");
-//   });
-
-//   // Khi click ra ngoài thì ẩn menu
-//   $(document).on("click", function () {
-//     $(".options-menu").removeClass("active");
-//   });
-
-//   // Ngăn menu bị ẩn khi click vào chính nó
-//   $(".options-menu").on("click", function (e) {
-//     e.stopPropagation();
-//   });
-// });
-
-// async function loadTasks() {
-//   try {
-//     let response = await fetch("http://localhost:9999/todolist/api/tasks"); // API lấy danh sách task
-//     let tasks = await response.json(); // Chuyển JSON thành object
-//     console.log(tasks);
-
-//     let taskList = document.getElementById("taskList"); // Lấy danh sách ul
-//     taskList.innerHTML = ""; // Xóa nội dung cũ trước khi render mới
-
-//     tasks.forEach((task) => {
-//       let li = document.createElement("li");
-//       li.classList.add("task-item-card");
-
-//       li.innerHTML = `
-//               <div class="task-card">
-//                   <div class="task-header">
-//                       <h3 class="task-title">${task.title}</h3>
-//                       <button class="task-options-btn">
-//                           <i class="fa fa-ellipsis-h"></i>
-//                       </button>
-//                   </div>
-//                   <div class="options-menu">
-//                       <ul>
-//                           <li class="edit-task" data-id="${
-//                             task.id
-//                           }">Edit Task</li>
-//                           <li class="delete-task" data-id="${
-//                             task.id
-//                           }">Delete Task</li>
-//                       </ul>
-//                   </div>
-//                   <p class="desc">${
-//                     task.description ? task.description : "No description"
-//                   }</p>
-//                   <p class="due-date">${
-//                     task.dueDate ? task.dueDate : "No due date"
-//                   }</p>
-//               </div>
-//           `;
-
-//       taskList.appendChild(li);
-//     });
-//   } catch (error) {
-//     console.error("Error loading tasks:", error);
-//   }
-// }
-
-// // Gọi hàm khi trang web load
-// document.addEventListener("DOMContentLoaded", loadTasks);
+    // 🛠 Nếu cần, gửi lên server bằng fetch API
+    fetch("/updateTaskStatus", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id: taskId, status: newStatus }),
+    })
+      .then((res) => res.json())
+      .then((data) => console.log("📡 Server response:", data))
+      .catch((err) => console.error("❌ Update failed:", err));
+  }
+}

@@ -54,4 +54,41 @@ public class TaskDAO extends DatabaseConnection {
         }
         return list;
     }
+    
+    public List<Task> getTasksByTodoIdAndUserId(int userId, int todoId) {
+        String sql = "SELECT * FROM `tasks` WHERE `user_id`=? AND `todolist_id`=?";
+        Task task;
+        List<Task> list = new ArrayList<>();
+        User user;
+        UserDAO udao = new UserDAO();
+        TodolistDAO tododao = new TodolistDAO();
+        Todolist todo;
+        try (PreparedStatement st = con.prepareStatement(sql)){
+            st.setInt(1, userId);
+            st.setInt(2, todoId);
+            ResultSet rs = st.executeQuery();
+            while(rs.next()) {
+                task = new Task();
+                todo = tododao.getTodolistById(rs.getInt("todolist_id"));
+                user = udao.getUserById(rs.getInt("user_id"));
+                LocalDate dueDate = rs.getDate("due_date") != null ? rs.getDate("due_date").toLocalDate() : null;
+                LocalDate createdAt = rs.getDate("created_at") != null ? rs.getDate("created_at").toLocalDate() : null;
+                LocalDate updatedAt = rs.getDate("updated_at") != null ? rs.getDate("updated_at").toLocalDate() : null;
+                task.setId(rs.getInt("id"));
+                task.setUser(user);
+                task.setTodolist(todo);
+                task.setTitle(rs.getString("title"));
+                task.setDescription(rs.getString("description"));
+                task.setStatus(rs.getString("status"));
+                task.setPriority(rs.getString("priority"));
+                task.setDueDate(dueDate);
+                task.setCreateAt(createdAt);
+                task.setUpdateAt(updatedAt);
+                list.add(task);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
 }

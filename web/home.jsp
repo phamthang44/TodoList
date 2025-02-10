@@ -1,11 +1,11 @@
 <%-- Document : home Created on : Feb 2, 2025, 3:34:06 PM Author : Admin --%>
-<%@page import="model.Todolist"%>
-<%@page import="dal.TodolistDAO"%>
-<%@page import="model.Task"%>
-<%@page import="java.util.List"%>
-<%@page import="model.User"%> <%@page contentType="text/html"
-pageEncoding="UTF-8"%> <%@taglib prefix="c"
-uri="http://java.sun.com/jsp/jstl/core" %>
+<%@page import="model.Todolist"%> 
+<%@page import="dal.TodolistDAO"%> 
+<%@page import="model.Task"%> 
+<%@page import="java.util.List"%> 
+<%@page import="model.User"%> 
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <!DOCTYPE html>
 <html>
@@ -39,10 +39,7 @@ uri="http://java.sun.com/jsp/jstl/core" %>
     ></script>
   </head>
   <body>
-    <% 
-        User user = (User)session.getAttribute("account");
-
-    %>
+    <% User user = (User) session.getAttribute("account"); %>
     <div class="container">
       <div class="sidebar">
         <div class="menu-btn">
@@ -54,7 +51,7 @@ uri="http://java.sun.com/jsp/jstl/core" %>
           </div>
           <div class="user-details">
             <p class="title">Web Developer</p>
-            <p class="name"><%= user.getUsername() %></p>
+            <p class="name"><%= user.getUsername()%></p>
           </div>
         </div>
         <div class="nav">
@@ -133,22 +130,18 @@ uri="http://java.sun.com/jsp/jstl/core" %>
       <main>
         <div class="main">
           <div class="block-adjust">
-            <div class="header">Dash board</div>
+            <div class="header">
+              Dash board &nbsp;&nbsp; > &nbsp;&nbsp; Tasks List
+            </div>
             <div class="horizontal-line"></div>
             <div class="body-dashboard">
               <div class="box">
-                  <% 
-                        Todolist todo = (Todolist) session.getAttribute("todoList");
-                        if (todo != null) { 
-                  %>
-                <h1 class="title"><%= todo.getName() %></h1>
-                <%
-                    } else {
-                %>
+                <% Todolist todo = (Todolist) session.getAttribute("todoList");
+                if (todo != null) { %>
+                <h1 class="title"><%= todo.getName()%></h1>
+                <% } else { %>
                 <h1 class="title">No todo found</h1>
-                <%
-                    }
-                %>
+                <% } %>
                 <div class="combo-user">
                   <a class="btn">
                     <i class="add fa-solid fa-plus"></i>
@@ -201,50 +194,24 @@ uri="http://java.sun.com/jsp/jstl/core" %>
           <div class="block__dashboardshow">
             <div class="block__tostart">
               <p class="state">To start</p>
-              <ul class="tasks">
-                <li class="task-item">
-                  <div class="task-card">
-                    <div class="task-header">
-                      <h3 class="task-title">Task 1</h3>
-                      <button class="task-options-btn">
-                        <i class="fa fa-ellipsis-h"></i>
-                        <!-- Nút 3 chấm -->
-                      </button>
-                      <div class="options-menu">
-                        <ul>
-                          <li><button class="edit">Edit Task</button></li>
-                          <li><button class="edit">Delete Task</button></li>
-                        </ul>
-                      </div>
-                    </div>
-
-                    <p class="desc">
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                      Expedita eligendi assumenda laudantium explicabo
-                      similique. Esse doloribus iste eligendi nam. Consequatur
-                      quidem libero expedita, quisquam nemo maxime! Quos,
-                      architecto dignissimos nesciunt ea iste dicta inventore.
-                      Laboriosam ut dolore dolores reiciendis nam voluptates!
-                      Suscipit a magni sint voluptatibus similique, sed id
-                      reprehenderit!
-                    </p>
-                    <p class="due-date">11/11/2025</p>
-                  </div>
-                </li>
-              </ul>
+              <ul class="block__tostart tasks dropzone"></ul>
             </div>
             <div class="block__inprogress">
               <p class="state">In progress</p>
-              <ul class="tasks"></ul>
+              <ul class="block__inprogress tasks dropzone"></ul>
             </div>
             <div class="block__done">
               <p class="state">Done</p>
-              <ul class="tasks"></ul>
+              <ul class="block__done tasks dropzone"></ul>
             </div>
           </div>
         </div>
       </main>
     </div>
+    <script>
+      var todolistId = <%= (todo != null) ? todo.getId() : -1 %>;
+      var contextPath = "<%= request.getContextPath() %>";
+    </script>
     <script src="./js/script.js"></script>
   </body>
 </html>

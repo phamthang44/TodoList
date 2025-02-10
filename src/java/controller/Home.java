@@ -54,19 +54,10 @@ public class Home extends HttpServlet {
         }
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        HttpSession session = request.getSession();
+        HttpSession session = request.getSession(false);
         User user = (User) session.getAttribute("account");
 
         if (user == null) {
@@ -93,23 +84,31 @@ public class Home extends HttpServlet {
 
         //take to parameter todolist_id
         String todoIdParam = request.getParameter("todolist_id");
+        if (todoIdParam == null || todoIdParam.isEmpty()) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing todolist_id");
+            return;
+        }
+
         int todolistId;
         try {
-            if (todoIdParam != null) {
-                todolistId = Integer.parseInt(todoIdParam);
-               
-                TodolistDAO tododao = new TodolistDAO();
-                Todolist todo = tododao.getTodolistById(todolistId);
-                
-                if (todo != null) {
-                    session.setAttribute("todoList", todo); // Gán vào session
-                }   
+
+            todolistId = Integer.parseInt(todoIdParam);
+            TodolistDAO tododao = new TodolistDAO();
+
+            if (!tododao.isUserOwnerOfTodo(user.getId(), todolistId)) {
+                response.sendError(HttpServletResponse.SC_FORBIDDEN, "Access denied");
+                return;
             }
+
+            // Nếu hợp lệ, lưu vào session
+            Todolist todo = tododao.getTodolistById(todolistId);
+            session.setAttribute("todoList", todo);
+            session.setAttribute("account", user);
+            request.getRequestDispatcher("home.jsp").forward(request, response);
         } catch (Exception e) {
             System.out.println(e);
         }
-        // Chuyển hướng đến home.jsp (chỉ gọi forward một lần)
-        request.getRequestDispatcher("home.jsp").forward(request, response);
+
     }
 
     /**

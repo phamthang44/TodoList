@@ -186,4 +186,19 @@ public class UserDAO extends DatabaseConnection {
         }
         return null;
     }
+    
+    public boolean isUserId(int userId) {
+        String sql = "SELECT * FROM `users` WHERE `id`=?";
+        try(PreparedStatement st = con.prepareStatement(sql)) {
+            st.setInt(1, userId);
+            ResultSet rs = st.executeQuery();
+            if(rs.next()) {
+                User user = new User(rs.getInt("id"), rs.getString("username"), rs.getString("email"), rs.getString("password"));
+                if (user != null) return true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 }
