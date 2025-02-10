@@ -28,15 +28,7 @@ import model.User;
 @WebServlet(name = "Home", urlPatterns = {"/home"})
 public class Home extends HttpServlet {
 
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
+ 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
@@ -59,7 +51,7 @@ public class Home extends HttpServlet {
             throws ServletException, IOException {
         HttpSession session = request.getSession(false);
         User user = (User) session.getAttribute("account");
-
+        
         if (user == null) {
             Cookie[] cookies = request.getCookies();
             if (cookies != null) {

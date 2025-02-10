@@ -19,6 +19,7 @@ let tasks = [];
 
 async function fetchTasks() {
   try {
+    console.log(contextPath);
     const response = await fetch(contextPath + `/tasks`);
     tasks = await response.json();
     console.log(tasks);

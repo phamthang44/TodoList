@@ -143,7 +143,7 @@
                 <h1 class="title">No todo found</h1>
                 <% } %>
                 <div class="combo-user">
-                  <a class="btn">
+                  <a href="addnewtask" class="btn">
                     <i class="add fa-solid fa-plus"></i>
                     <span class="text">New Task</span>
                   </a>
@@ -211,6 +211,8 @@
     <script>
       var todolistId = <%= (todo != null) ? todo.getId() : -1 %>;
       var contextPath = "<%= request.getContextPath() %>";
+      console.log(todolistId);
+      console.log(contextPath);
     </script>
     <script src="./js/script.js"></script>
   </body>
