@@ -1,19 +1,22 @@
 package model;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+
+
 
 public class Task {
+
     private int id;
     private User user; // Liên kết với User
+
     private Todolist todolist; // Liên kết với Todolist
     private String title;
     private String description;
     private String status;
     private String priority;
     private LocalDate dueDate; // Sử dụng LocalDate cho ngày (chỉ ngày, không có thời gian)
-    private LocalDate createAt; // Sử dụng LocalDateTime cho ngày giờ
-    private LocalDate updateAt; // Sử dụng LocalDateTime cho ngày giờ
+    private LocalDate createAt; // 
+    private LocalDate updateAt; // 
 
 
     // Constructor mặc định

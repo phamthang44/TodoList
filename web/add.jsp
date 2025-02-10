@@ -44,7 +44,7 @@
         <option value="High">High</option>
       </select>
       <label for="due_date">Due date:</label>
-      <input type="date" id="due_date" />
+      <input type="date" id="due_date" required />
       <button type="submit">Thêm Task</button>
     </form>
 
@@ -82,23 +82,29 @@
           const description = document.getElementById("description").value;
           const status = document.getElementById("status").value;
           const priority = document.getElementById("priority").value;
-          const dueDate = document.getElementById("due_date").value || "N/A";
-          const createdAt = new Date().toISOString();
+          const today = new Date();
+          const dueDate =
+            document.getElementById("due_date").value ??
+            today.toISOString().split("T")[0];
+          const createdAt = today.toISOString().split("T")[0];
           const updatedAt = createdAt;
 
           // Thêm task vào danh sách
           const newTask = {
-            taskId,
-            todoListId,
-            title,
-            description,
-            status,
-            priority,
-            dueDate,
-            createdAt,
-            updatedAt,
+            taskId: taskId,
+            todoListId: todoListId,
+            title: title,
+            description: description,
+            status: status,
+            priority: priority,
+            dueDate: dueDate,
+            createdAt: createdAt,
+            updatedAt: updatedAt,
           };
+
           tasks.push(newTask);
+
+          console.log(tasks);
           renderTasks();
 
           // Reset form
@@ -107,21 +113,24 @@
 
       function renderTasks() {
         const tableBody = document.getElementById("taskTableBody");
-        tableBody.innerHTML = ""; // Xóa nội dung cũ
+        let rows = ""; // Tạo chuỗi HTML
+
         tasks.forEach((task) => {
-          const row = `<tr>
-                    <td>${task.taskId}</td>
-                    <td>${task.todoListId}</td>
-                    <td>${task.title}</td>
-                    <td>${task.description}</td>
-                    <td>${task.status}</td>
-                    <td>${task.priority}</td>
-                    <td>${task.dueDate}</td>
-                    <td>${task.createdAt}</td>
-                    <td>${task.updatedAt}</td>
-                </tr>`;
-          tableBody.innerHTML += row;
+          console.log(task);
+          //dm lỗi template String là do ${} JSP EL nó cũng nhận luôn nên gây lỗi
+          //giải pháp sau này \$ để tránh lỗi
+          rows += `<td>\${task.taskId ?? "N/A"}</td>
+                  <td>\${task.todoListId ?? "N/A"}</td>
+                  <td>\${task.title ?? "No Title"}</td>
+                  <td>\${task.description ?? "No Description"}</td>
+                  <td>\${task.status ?? "Pending"}</td>
+                  <td>\${task.priority ?? "Normal"}</td>
+                  <td>\${task.dueDate}</td>
+                  <td>\${task.createdAt ?? "N/A"}</td>
+                  <td>\${task.updatedAt ?? "N/A"}</td>`;
         });
+
+        tableBody.innerHTML = rows; // Cập nhật bảng một lần
       }
     </script>
   </body>
