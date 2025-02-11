@@ -197,3 +197,10 @@ Validator.isConfirmed = function (selector, getConfirmedValue, message) {
     },
   };
 };
+
+Validator.isRequiredDate = function (selector) {
+  return {
+    selector: selector,
+    test: function () {},
+  };
+};

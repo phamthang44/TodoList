@@ -40,6 +40,10 @@ public class AddNewTaskServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        //viết logic để đầu tiên là load các task của thg todolist lên trang trước khi thêm mới để 
+        //lấy id cuối cùng của task cuối cùng 
+        //sau đó + thêm 1
+        //
         
         
         
