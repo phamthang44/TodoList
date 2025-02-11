@@ -204,3 +204,12 @@ Validator.isRequiredDate = function (selector) {
     test: function () {},
   };
 };
+
+Validator.hasNoWhiteSpace = function (selector) {
+  return {
+    selector: selector,
+    test: function (s) {
+      return !/\s/g.test(s) ? undefined : "Please do not use white space";
+    },
+  };
+};

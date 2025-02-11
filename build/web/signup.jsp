@@ -81,8 +81,11 @@
         rules: [
           Validator.isRequired("#username"),
           Validator.isRequired("#password"),
+          Validator.hasNoWhiteSpace("#username"),
+          Validator.hasNoWhiteSpace("#password"),
           Validator.minLength("#password", 6, "Please do not empty this field"),
           Validator.isRequired("#email"),
+          Validator.hasNoWhiteSpace("#email"),
           Validator.isEmail("#email"),
         ],
       });

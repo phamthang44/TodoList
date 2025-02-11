@@ -50,10 +50,10 @@ public class LoginServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String username = request.getParameter("username");
-        String password= request.getParameter("password");
+        String password = request.getParameter("password");
         //cần thêm validate phòng trường hợp nó ném sql vào hoặc kí tự không phù hợp
         // ....
-        //.........
+        //........
         //
         String rem = request.getParameter("remember");
         UserDAO udao = new UserDAO();

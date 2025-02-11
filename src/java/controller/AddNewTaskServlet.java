@@ -4,6 +4,8 @@
  */
 package controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import dal.TaskDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -11,6 +13,8 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.io.BufferedReader;
+import model.Task;
 
 /**
  *
@@ -40,13 +44,6 @@ public class AddNewTaskServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        //viết logic để đầu tiên là load các task của thg todolist lên trang trước khi thêm mới để 
-        //lấy id cuối cùng của task cuối cùng 
-        //sau đó + thêm 1
-        //
-        
-        
-        
         
         request.getRequestDispatcher("add.jsp").forward(request, response);
     }
@@ -62,7 +59,18 @@ public class AddNewTaskServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        //viết logic để đầu tiên là load các task của thg todolist lên trang trước khi thêm mới để 
+        //lấy id cuối cùng của task cuối cùng 
+        //sau đó + thêm 1
+        ObjectMapper objectMapper = new ObjectMapper();
+        Task task = objectMapper.readValue(request.getInputStream(), Task.class);
+        
+        TaskDAO taskDAO = new TaskDAO();
+        
+        
+        
+        
+      
     }
 
     /**

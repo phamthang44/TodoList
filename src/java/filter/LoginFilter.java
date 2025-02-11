@@ -26,7 +26,7 @@ import model.User;
  *
  * @author Admin
  */
-@WebFilter(filterName = "LoginFilter", urlPatterns = {"/*"})
+
 public class LoginFilter implements Filter {
 
     private static final boolean debug = true;

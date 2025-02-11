@@ -16,7 +16,7 @@ import jakarta.servlet.http.HttpServletResponse;
  *
  * @author Admin
  */
-@WebServlet(name = "RedirectServlet", urlPatterns = {"/todolist/"})
+@WebServlet(name = "RedirectServlet", urlPatterns = {"/"})
 public class RedirectServlet extends HttpServlet {
 
    

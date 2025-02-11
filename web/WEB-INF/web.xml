@@ -8,6 +8,7 @@
         <filter-name>LoginFilter</filter-name>
         <url-pattern>/home</url-pattern>
         <url-pattern>/dashboard</url-pattern>
+        <url-pattern>/</url-pattern>
     </filter-mapping>
     <servlet>
         <servlet-name>LoginServlet</servlet-name>

@@ -9,6 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import model.Task;
 import model.Todolist;
@@ -53,6 +54,47 @@ public class TaskDAO extends DatabaseConnection {
             e.getSQLState();
         }
         return list;
+    }
+    
+    public void insertWithDefault(Task t) {
+        String sql = "INSERT INTO `tasks` (`user_id`, `title`, `description`)  VALUES (?, ?, ?) WHERE `todolist_id`=? AND `user_id`=?";
+        
+        try (PreparedStatement st = con.prepareStatement(sql)){
+            st.setInt(1, t.getUser().getId());
+            st.setString(2, t.getTitle());
+            st.setString(3, t.getDescription());
+            st.setInt(4, t.getTodolist().getId());
+            st.setInt(5, t.getUser().getId());
+            st.executeUpdate();
+            //
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public void insertWithFullData(Task t) {
+        String sql = "INSERT INTO `tasks` (`user_id`, `todolist_id`, `title`, `description`, `status`, `priority`, `due_date`, `created_at`, `updated_at`)  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        
+        try (PreparedStatement st = con.prepareStatement(sql)){
+            st.setInt(1, t.getUser().getId());
+            st.setInt(2, t.getTodolist().getId());
+            st.setString(3, t.getTitle());
+            st.setString(4, t.getDescription());
+            st.setString(5, t.getStatus());
+            st.setString(6, t.getPriority());
+                
+            // Chuyển đổi LocalDate -> java.sql.Date
+            st.setDate(7, java.sql.Date.valueOf(t.getDueDate()));
+            st.setDate(8, java.sql.Date.valueOf(t.getCreateAt()));
+            st.setDate(9, java.sql.Date.valueOf(t.getUpdateAt()));
+            
+            st.executeUpdate();
+            //
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
     
     public List<Task> getTasksByTodoIdAndUserId(int userId, int todoId) {
