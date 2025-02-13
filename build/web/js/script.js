@@ -25,7 +25,7 @@ async function fetchTasks() {
     console.log(tasks);
 
     // Lọc từng nhóm theo status
-    let toStart = tasks.filter((task) => task.status === "Pending");
+    let toStart = tasks.filter((task) => task.status === "To start");
     let inProgress = tasks.filter((task) => task.status === "In Progress");
     let done = tasks.filter((task) => task.status === "Done");
 

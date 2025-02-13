@@ -9,6 +9,7 @@
         <url-pattern>/home</url-pattern>
         <url-pattern>/dashboard</url-pattern>
         <url-pattern>/</url-pattern>
+        <url-pattern>/addnewtask</url-pattern>
     </filter-mapping>
     <servlet>
         <servlet-name>LoginServlet</servlet-name>
@@ -42,4 +43,7 @@
         <servlet-name>AddNewTodolist</servlet-name>
         <url-pattern>/addnewtodolist</url-pattern>
     </servlet-mapping>
+    <welcome-file-list>
+        <welcome-file>HomeServlet</welcome-file>
+    </welcome-file-list>
 </web-app>

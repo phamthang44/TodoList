@@ -38,22 +38,27 @@
     <h2>Tasks list</h2>
 
     <!-- Form thêm Task -->
-    <form id="taskForm">
-      <input type="text" id="title" placeholder="Title" />
-      <input type="text" id="description" placeholder="Description" />
-      <select id="status">
+    <form id="taskForm" method="post">
+      <input type="text" id="title" placeholder="Title" name="title" />
+      <input
+        type="text"
+        id="description"
+        placeholder="Description"
+        name="description"
+      />
+      <select id="status" name="status">
         <option value="To start">To start</option>
         <option value="In progress">In progress</option>
         <option value="Done">Done</option>
       </select>
-      <select id="priority">
+      <select id="priority" name="priority">
         <option value="Low">Low</option>
         <option value="Medium">Medium</option>
         <option value="High">High</option>
       </select>
       <label for="due_date">Due date:</label>
-      <input type="date" id="due_date" />
-      <button type="submit">Thêm Task</button>
+      <input type="date" id="due_date" name="due_date" />
+      <button type="submit" id="submitter">Thêm Task</button>
     </form>
     <span class="msg"></span>
     <div class="spacer"></div>
@@ -76,6 +81,7 @@
         <!-- Tasks sẽ được thêm vào đây -->
       </tbody>
     </table>
+    <button class="back-to-main" id="homeButton">Back to home</button>
     <script src="./js/crud.js"></script>
 
     <script>
@@ -86,14 +92,14 @@
         if (!inputValue1 || !inputValue2) {
           errorMsg = "This field is required";
           return errorMsg;
-        } else if (hasWhiteSpace(inputValue1) || hasWhiteSpace(inputValue1)) {
-          errorMsg = "This field should not have any white spaces!";
         } else {
           errorMsg = "";
         }
         return errorMsg;
       }
-
+      //else if (hasWhiteSpace(inputValue1) || hasWhiteSpace(inputValue1)) {
+      //  errorMsg = "This field should not have any white spaces!";
+      //}
       function hasWhiteSpace(s) {
         return /\s/g.test(s);
       }
@@ -127,13 +133,13 @@
       CrudTasks({
         formSelector: "#taskForm",
         renderArea: "#taskTableBody",
+        formSubmitter: "#submitter",
         contextPath: contextPath,
         onSubmit: async function (data) {
+          console.log("Sending data:", JSON.stringify(data));
           return await fetch(contextPath + "/addnewtask", {
             method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
           });
         },

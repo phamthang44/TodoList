@@ -2,20 +2,6 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group>
-            <file>file:/D:/Desktop/GCS230575-Java%20Backend/JavaWeb/TodoList-App/src/java/model/Task.java</file>
-            <file>file:/D:/Desktop/GCS230575-Java%20Backend/JavaWeb/TodoList-App/web/WEB-INF/web.xml</file>
-            <file>file:/D:/Desktop/GCS230575-Java%20Backend/JavaWeb/TodoList-App/src/java/controller/SignUpServlet.java</file>
-            <file>file:/D:/Desktop/GCS230575-Java%20Backend/JavaWeb/TodoList-App/web/home.jsp</file>
-            <file>file:/D:/Desktop/GCS230575-Java%20Backend/JavaWeb/TodoList-App/web/dashboard.jsp</file>
-            <file>file:/D:/Desktop/GCS230575-Java%20Backend/JavaWeb/TodoList-App/src/java/controller/RedirectServlet.java</file>
-            <file>file:/D:/Desktop/GCS230575-Java%20Backend/JavaWeb/TodoList-App/src/java/controller/TasksServlet.java</file>
-            <file>file:/D:/Desktop/GCS230575-Java%20Backend/JavaWeb/TodoList-App/web/add.jsp</file>
-            <file>file:/D:/Desktop/GCS230575-Java%20Backend/JavaWeb/TodoList-App/src/java/controller/AddNewTaskServlet.java</file>
-            <file>file:/D:/Desktop/GCS230575-Java%20Backend/JavaWeb/TodoList-App/src/java/controller/LoginServlet.java</file>
-            <file>file:/D:/Desktop/GCS230575-Java%20Backend/JavaWeb/TodoList-App/src/java/controller/Home.java</file>
-            <file>file:/D:/Desktop/GCS230575-Java%20Backend/JavaWeb/TodoList-App/src/java/controller/TodolistServlet.java</file>
-            <file>file:/D:/Desktop/GCS230575-Java%20Backend/JavaWeb/TodoList-App/src/java/model/Todolist.java</file>
-        </group>
+        <group/>
     </open-files>
 </project-private>

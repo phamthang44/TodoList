@@ -9,12 +9,15 @@ package model;
  *
  * @author Admin
  */
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
 
 public class Todolist {
     private int id;
     private int userId; 
     private String name;
+    
+    @JsonIgnore // Không serialize tasks khi trả về JSON
     private List<Task> tasks; // Danh sách task thuộc dự án này
 
     // Constructor không có tham số

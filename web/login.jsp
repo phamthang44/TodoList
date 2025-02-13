@@ -1,5 +1,6 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%> 
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -78,7 +79,7 @@
     </div>
     <script src="${pageContext.request.contextPath}/js/validator.js"></script>
     <script>
-      let invalidMsg = "${(requestScope.invalid != null) ? "The username or password is not correct" : ""}";
+      let invalidMsg = '${(requestScope.invalid != null) ? "The username or password is not correct" : ""}';
       const formMsg = document.querySelectorAll(".form-message");
       if (invalidMsg) {
           formMsg.forEach((msg) => {
