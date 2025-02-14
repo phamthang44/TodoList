@@ -1,10 +1,7 @@
 <%-- Document : home Created on : Feb 2, 2025, 3:34:06 PM Author : Admin --%>
-<%@page import="model.Todolist"%> 
-<%@page import="dal.TodolistDAO"%> 
-<%@page import="model.Task"%> 
-<%@page import="java.util.List"%> 
-<%@page import="model.User"%> 
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page import="model.Todolist"%> <%@page import="dal.TodolistDAO"%> <%@page
+import="model.Task"%> <%@page import="java.util.List"%> <%@page
+import="model.User"%> <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <!DOCTYPE html>
@@ -143,7 +140,7 @@
                 <h1 class="title">No todo found</h1>
                 <% } %>
                 <div class="combo-user">
-                  <a href="addnewtask" class="btn">
+                  <a href="addnewtask" class="add-btn">
                     <i class="add fa-solid fa-plus"></i>
                     <span class="text">New Task</span>
                   </a>
@@ -194,15 +191,15 @@
           <div class="block__dashboardshow">
             <div class="block__tostart">
               <p class="state">To start</p>
-              <ul class="block__tostart tasks dropzone"></ul>
+              <ul class="block__tostart tasks"></ul>
             </div>
             <div class="block__inprogress">
               <p class="state">In progress</p>
-              <ul class="block__inprogress tasks dropzone"></ul>
+              <ul class="block__inprogress tasks"></ul>
             </div>
             <div class="block__done">
               <p class="state">Done</p>
-              <ul class="block__done tasks dropzone"></ul>
+              <ul class="block__done tasks"></ul>
             </div>
           </div>
         </div>

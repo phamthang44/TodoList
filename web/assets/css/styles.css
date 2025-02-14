@@ -323,7 +323,7 @@ main {
   border: 1px solid #fff;
 }
 
-.btn {
+.add-btn {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -337,7 +337,7 @@ main {
   font-weight: 400;
 }
 
-.btn:hover {
+.add-btn:hover {
   opacity: 0.9;
 }
 
@@ -501,6 +501,9 @@ main {
   border-radius: 10px;
   height: 100%;
 }
+.task-item {
+  margin-top: 5px;
+}
 
 .task-card {
   position: relative;
@@ -534,7 +537,7 @@ main {
   color: #767676;
 }
 
-.task-card .date {
+.date {
   font-size: 1.3rem;
   font-weight: 450;
   color: #767676;
@@ -728,4 +731,140 @@ main {
   font-size: 2rem;
   font-weight: 450;
   margin-top: 10px;
+}
+
+/* Update and Delete place for tasks */
+/* Build in modal to more flexible */
+
+button {
+  border: none;
+  outline: none;
+  background: transparent;
+}
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.6);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity, visibility;
+  transition-duration: 0.4s;
+}
+
+.modal-backdrop.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+.modal-backdrop.show .modal-container {
+  transform: scale(1);
+}
+
+.modal-close {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: #ebebeb;
+  font-size: 2rem;
+  color: #666;
+}
+
+.modal-close:hover {
+  color: #333;
+  cursor: pointer;
+}
+
+.modal-container {
+  width: min(600px, 90%);
+  position: relative;
+  padding: 28px;
+  border-radius: 10px;
+  background-color: #fff;
+  transform: scale(0);
+  transition: transform 0.3s;
+  height: 500px;
+}
+
+.modal-content {
+  padding-top: 30px;
+  height: 100%;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  gap: 20px;
+  padding-bottom: 30px;
+}
+
+.btn {
+  width: 100px;
+  height: 40px;
+  background-color: #fff;
+  border: 1px solid #333;
+  border-radius: 99px;
+  margin: 20px;
+}
+.btn:hover {
+  background-color: #ccc;
+}
+
+.modal-editable {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  width: 140px;
+  height: 30px;
+  font-size: 2rem;
+  background: #15a1b7;
+  border-radius: 99px;
+  font-size: 1.5rem;
+  color: #fff;
+  transition: all 0.4s;
+  border: 1px solid #fff;
+}
+
+.modal-editable:hover {
+  cursor: pointer;
+  background-color: #fff;
+  border: 1px solid #15a1b7;
+  color: #15a1b7;
+}
+
+.modal-detail.title {
+  font-size: 4rem;
+}
+
+.modal-detail.description {
+  flex: 1;
+}
+
+.text-style {
+  font-weight: 500;
+}
+[data-priority="Low"] {
+  color: greenyellow;
+}
+
+[data-priority="Medium"] {
+  color: #ffbf00;
+}
+
+[data-priority="High"] {
+  color: red;
+}
+
+[data-status="To start"] {
+  color: #06d9fa;
+}
+[data-status="In Progress"] {
+  color: #ffbf00;
+}
+[data-status="Done"] {
+  color: #82eb0b;
 }
