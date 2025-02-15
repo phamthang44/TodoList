@@ -8,6 +8,7 @@ function CrudTasks(options) {
   let container = document.querySelector(options.renderArea);
   let submitter = document.querySelector(options.formSubmitter);
   let contextPath = options.contextPath || "";
+  let todolist = getTaskInfo();
   let tasks = getTasksFromLocalStorage(); // Lưu danh sách task tạm thời trên client
   // 📝 Lấy dữ liệu từ form dưới dạng object
 
@@ -17,8 +18,8 @@ function CrudTasks(options) {
     return {
       title: formData.get("title") || "No Title",
       description: formData.get("description") || "No Description",
-      status: formData.get("status") || "Pending",
-      priority: formData.get("priority") || "Normal",
+      status: formData.get("status") || "To start",
+      priority: formData.get("priority") || "Low",
       dueDate:
         formData.get("due_date") || new Date().toISOString().split("T")[0],
       id: tasks.length + 1, // Tạo id tạm thời cho task
@@ -141,11 +142,11 @@ function CrudTasks(options) {
   });
 
   // Xử lý khi click về trang chủ
-  document.getElementById("homeButton")?.addEventListener("click", function () {
-    localStorage.removeItem("tasks");
-    window.location.href =
-      contextPath + "/home?todolist_id=" + getTaskInfo().todolistId;
-  });
+  // document.getElementById("homeButton")?.addEventListener("click", function () {
+  //   localStorage.removeItem("tasks");
+  //   window.location.href =
+  //     contextPath + "/home?todolist_id=" + todolist.todolistId;
+  // });
 
   fetchTasks();
 }

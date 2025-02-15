@@ -782,9 +782,9 @@ button {
 }
 
 .modal-container {
-  width: min(600px, 90%);
+  width: min(1000px, 90%);
   position: relative;
-  padding: 28px;
+  padding: 70px;
   border-radius: 10px;
   background-color: #fff;
   transform: scale(0);
@@ -795,11 +795,14 @@ button {
 .modal-content {
   padding-top: 30px;
   height: 100%;
+}
+
+.updateTask {
+  height: 100%;
   display: flex;
   align-items: flex-start;
   flex-direction: column;
   gap: 20px;
-  padding-bottom: 30px;
 }
 
 .btn {
@@ -817,7 +820,7 @@ button {
 .modal-editable {
   position: absolute;
   top: 20px;
-  left: 20px;
+  left: 50px;
   width: 140px;
   height: 30px;
   font-size: 2rem;
@@ -836,11 +839,15 @@ button {
   color: #15a1b7;
 }
 
+.modal-editable:active {
+  transform: scale(0.9);
+}
+
 .modal-detail.title {
   font-size: 4rem;
 }
 
-.modal-detail.description {
+.updateTask .modal-detail.description {
   flex: 1;
 }
 
@@ -867,4 +874,84 @@ button {
 }
 [data-status="Done"] {
   color: #82eb0b;
+}
+
+.updateTask textarea {
+  resize: none;
+  width: 100%;
+  height: 200px;
+  overflow: auto;
+}
+
+.updateTask input,
+textarea {
+  padding: 10px;
+  border: 2px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  color: #555;
+  outline: none;
+}
+
+.modal-content input:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.modal-content textarea:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.cancel {
+  position: absolute;
+  top: 20px;
+  right: 10px;
+  width: 120px;
+  height: 30px;
+  border-radius: 99px;
+  color: #fff;
+  background-color: red;
+  font-weight: 500;
+  transition: all 0.3s;
+  border: 1px solid #fff;
+}
+.cancel:hover {
+  background-color: #fff;
+  color: red;
+  border: 1px solid red;
+}
+
+.cancel:active {
+  transform: scale(0.9);
+}
+
+.updateTask {
+  width: 100%;
+  height: 100%;
+}
+
+.save-btn {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  width: 100px;
+  height: 40px;
+  border-radius: 10px;
+  background-color: #06d9fa;
+  color: #fff;
+  font-weight: 500;
+  transform: scale(0.9);
+  transition: all 0.3s;
+  border: 1px solid #fff;
+}
+
+.save-btn:hover {
+  background-color: #fff;
+  color: #06d9fa;
+  border: 1px solid #06d9fa;
+}
+
+.save-btn:active {
+  transform: scale(1);
 }

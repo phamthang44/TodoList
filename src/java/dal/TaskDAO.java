@@ -56,6 +56,25 @@ public class TaskDAO extends DatabaseConnection {
         return list;
     }
     
+    public void updateTask(String title, String description, String priority, String status, int id) {
+        String sql = "UPDATE `tasks` SET `title`=?, `description`=?, `status`=?, `priority`=? WHERE `id`=?";
+        if (title == null || description == null || priority == null || status == null) {
+            return;
+        }
+        
+        try (PreparedStatement st = con.prepareStatement(sql)){
+            st.setString(1, title);
+            st.setString(2, description);
+            st.setString(3, status);
+            st.setString(4, priority);
+            st.setInt(5, id);
+            st.executeUpdate();
+        } catch (SQLException e) {
+       
+        }
+
+    }
+    
     public void insertWithDefault(Task t) {
         String sql = "INSERT INTO `tasks` (`user_id`, `title`, `description`)  VALUES (?, ?, ?) WHERE `todolist_id`=? AND `user_id`=?";
         
@@ -96,6 +115,40 @@ public class TaskDAO extends DatabaseConnection {
             e.printStackTrace();
         }
         
+    }
+    
+    public Task getTaskById(int id) {
+        String sql = "SELECT * FROM `tasks` WHERE `id`=?";
+        Task task = new Task();
+        UserDAO udao = new UserDAO();
+        User user;
+        Todolist todo;
+        TodolistDAO tododao = new TodolistDAO();
+        try (PreparedStatement st = con.prepareStatement(sql)) {
+            st.setInt(1, id);
+            ResultSet rs = st.executeQuery();
+            if(rs.next()) {
+                todo = tododao.getTodolistById(rs.getInt("todolist_id"));
+                user = udao.getUserById(rs.getInt("user_id"));
+                LocalDate dueDate = rs.getDate("due_date") != null ? rs.getDate("due_date").toLocalDate() : null;
+                LocalDate createdAt = rs.getDate("created_at") != null ? rs.getDate("created_at").toLocalDate() : null;
+                LocalDate updatedAt = rs.getDate("updated_at") != null ? rs.getDate("updated_at").toLocalDate() : null;
+                task.setId(rs.getInt("id"));
+                task.setUser(user);
+                task.setTodolist(todo);
+                task.setTitle(rs.getString("title"));
+                task.setDescription(rs.getString("description"));
+                task.setStatus(rs.getString("status"));
+                task.setPriority(rs.getString("priority"));
+                task.setDueDate(dueDate);
+                task.setCreateAt(createdAt);
+                task.setUpdateAt(updatedAt);
+                
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return task;
     }
     
     public List<Task> getTasksByTodoIdAndUserId(int userId, int todoId) {

@@ -79,14 +79,21 @@ function renderTasks(containerClass, tasks) {
         return;
       }
 
-      modal.openModal(`<h3 class="modal-detail title">${task.title}</h3>
-          <p class="modal-detail description">${task.description}</p>
-          <p class="modal-detail status">Status : <span class="text-style" data-status="${task.status}">${task.status}</span></p>
-          <p class="modal-detail priority">Priority : <span class="text-style" data-priority="${task.priority}">${task.priority}</span></p>
+      modal.openModal(`
+        <form class="updateTask" method="put" id="updateTask">
+          <span id="taskId" data-id=${task.id}></span>
+          <h3 class="modal-detail title" id="taskTitle">${task.title}</h3>
+          <p class="modal-detail description" id="taskDescription">${task.description}</p>
+          <p><label>Status : </label><span class="modal-detail status text-style" data-status="${task.status}">${task.status}</span></p>
+          <p><label>Priority : </label><span class="modal-detail priority text-style" data-priority="${task.priority}">${task.priority}</span></p>
           <p class="modal-detail date">Created at : ${task.createAt}</p>
-          <p class="modal-detail date">Updated at : ${task.updateAt}</p>`);
+          <p class="modal-detail date">Updated at : ${task.updateAt}</p>
+          <span class="form-message"></span>
+          <button type="submit" class="save-btn" id="updateTaskSubmit">Save</button>
+        </form>`);
     };
   });
+
   const taskCards = document.querySelectorAll(".task-card"); // Chọn tất cả các .task-card
 
   taskCards.forEach((taskCard) => {
@@ -110,9 +117,200 @@ function renderTasks(containerClass, tasks) {
   });
 }
 
-// Lấy `todolist_id` từ URL
+function getFormDataObject(form, submitter) {
+  let formData = new FormData(form, submitter);
+  return {
+    title: formData.get("title") || "No Title",
+    description: formData.get("description") || "No Description",
+    status: formData.get("status") || "To start",
+    priority: formData.get("priority") || "Low",
+    updateAt: new Date().toISOString().split("T")[0],
+  };
+}
+
+async function updateTask(form, submitter, id, todolist_id) {
+  const updateInfos = getFormDataObject(form, submitter);
+  const taskId = id;
+  const { title, description, status, priority, updateAt } = updateInfos;
+  const todolistId = todolist_id;
+  if (!id) return alert("Task ID is missing!");
+  if (!title.trim() || !description.trim())
+    return alert("Please input valid info!");
+
+  try {
+    const response = await fetch(contextPath + "/updatetask", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        id: taskId,
+        title,
+        description,
+        status,
+        priority,
+        updateAt,
+        todolistId: todolistId,
+      }),
+    });
+
+    if (!response.ok) throw new Error("Update failed!");
+
+    const data = await response.json();
+    alert("Task updated successfully!");
+    console.log("Updated Task:", data);
+    window.location.href = contextPath + "/home?todolist_id=" + todolistId;
+  } catch (error) {
+    console.error("Error updating task:", error);
+    alert("Failed to update task!");
+  }
+}
 
 fetchTasks();
+
+//update function
+document.addEventListener("submit", function (event) {
+  if (event.target.matches("#updateTask")) {
+    const form = event.target.matches("#updateTask");
+    const submitter = event.target.matches("#updateTaskSubmit");
+    const taskId = event.target.matches("#taskId");
+    const id = +taskId.data.id;
+
+    event.preventDefault(); // Ngăn chặn reload trang
+    updateTask(form, submitter, id);
+  }
+});
+
+// ------------- MODAL BLOCK --------------------
+
+function Modal() {
+  this.openModal = (content) => {
+    //Create modal elements
+    const backdrop = document.createElement("div");
+    backdrop.className = "modal-backdrop";
+
+    const container = document.createElement("div");
+    container.className = "modal-container";
+
+    const closeBtn = document.createElement("button");
+    closeBtn.className = "modal-close";
+    closeBtn.innerHTML = "&times;";
+
+    const editableBtn = document.createElement("button");
+    editableBtn.className = "modal-editable";
+    editableBtn.innerText = "Click to edit";
+
+    const cancelEdit = document.createElement("button");
+    cancelEdit.className = "cancel";
+    cancelEdit.innerText = "Cancel edit";
+
+    const modalContent = document.createElement("div");
+    modalContent.className = "modal-content";
+
+    //Append content and elements
+    modalContent.innerHTML = content;
+    container.append(closeBtn, modalContent, editableBtn);
+    backdrop.append(container);
+    document.body.append(backdrop);
+
+    //backdrop.classList.add("show");
+    setTimeout(() => {
+      backdrop.classList.add("show");
+    }, 0);
+
+    // Attach event listeners
+    closeBtn.onclick = () => this.closeModal(backdrop);
+    // backdrop.onclick = (e) => {
+    //   console.log(e.target);
+    //   if (e.target === backdrop) {
+    //     this.closeModal(backdrop);
+    //   }
+    // };
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        this.closeModal(backdrop);
+      }
+    });
+
+    editableBtn.onclick = () => {
+      this.changeEditableState(modalContent);
+      container.append(cancelEdit);
+      closeBtn.remove();
+    };
+
+    cancelEdit.onclick = () => {
+      this.cancelEditChange();
+      this.closeModal(backdrop);
+    };
+  };
+
+  this.closeModal = (modalElement) => {
+    modalElement.classList.remove("show");
+    // document.body.removeChild(modalElement);
+    modalElement.ontransitionend = () => {
+      modalElement.remove();
+    };
+  };
+
+  this.cancelEditChange = () => {
+    this.originalValues.forEach((value, element) => {
+      let newElement = document.createElement(element.tagName.toLowerCase());
+      newElement.className = element.className;
+      newElement.textContent = value;
+      element.replaceWith(newElement);
+    });
+    this.originalValues.clear();
+  };
+
+  this.changeEditableState = () => {
+    this.originalValues = new Map(); // Map save original content
+    const details = document.querySelectorAll(".modal-detail");
+    details.forEach((detail) => {
+      if (detail.classList.contains("date")) return;
+
+      this.originalValues.set(detail, detail.innerHTML.trim());
+
+      let newElement;
+      let fieldName = detail.classList[1] || "field";
+      let currentValue = detail.textContent.trim();
+
+      if (detail.classList.contains("description")) {
+        // If description use textarea
+        newElement = document.createElement("textarea");
+        newElement.value = detail.textContent.trim();
+        newElement.name = "description";
+        newElement.required = true;
+      } else if (
+        detail.classList.contains("priority") ||
+        detail.classList.contains("status")
+      ) {
+        newElement = document.createElement("select");
+
+        let options = [];
+        if (detail.classList.contains("priority")) {
+          options = ["Low", "Medium", "High"];
+        } else if (detail.classList.contains("status")) {
+          options = ["To start", "In progress", "Done"];
+        }
+
+        options.forEach((option) => {
+          let optElement = document.createElement("option");
+          optElement.value = option;
+          optElement.textContent = option;
+          if (option === currentValue) optElement.selected = true;
+          newElement.appendChild(optElement);
+        });
+      } else {
+        // other -> text
+        newElement = document.createElement("input");
+        newElement.type = "text";
+      }
+      newElement.value = detail.textContent.trim();
+      newElement.name = fieldName;
+      newElement.required = true;
+      newElement.classList.add(...detail.classList);
+      detail.replaceWith(newElement);
+    });
+  };
+}
 
 // document.addEventListener("DOMContentLoaded", function () {
 //   let draggedTask = null;
@@ -179,83 +377,3 @@ fetchTasks();
 //       .catch((err) => console.error("❌ Update failed:", err));
 //   }
 // }
-// ------------- MODAL BLOCK --------------------
-
-function createModalTaskCard(task) {
-  const backDrop = document.getElementsByTagName("body");
-  const taskCard = document.querySelector(".task-item");
-  taskCard.onclick = function (e) {
-    if (e.target === this) {
-      backDrop.innerHTML = `
-    <div class="modal-backdrop">
-      <div class="modal-container">
-        <button id="modal-editable" class="modal-editable">Edit</button>
-        <button id="modal-close" class="modal-close">&times;</button>
-        <div class="modal-content">
-          <h3 class="task-card--title">${task.title}</h3>
-          <p class="task-card--description">${task.description}</p>
-          <p class="task-card--status">${task.status}</p>
-          <p class="task-card--priority">${task.priority}</p>
-          <p class="date">${task.createAt}</p>
-          <p class="date">${task.updateAt}</p>
-        </div>
-      </div>
-    </div>`;
-    }
-  };
-}
-
-function Modal() {
-  this.openModal = (content) => {
-    //Create modal elements
-    const backdrop = document.createElement("div");
-    backdrop.className = "modal-backdrop";
-
-    const container = document.createElement("div");
-    container.className = "modal-container";
-
-    const closeBtn = document.createElement("button");
-    closeBtn.className = "modal-close";
-    closeBtn.innerHTML = "&times;";
-
-    const editableBtn = document.createElement("button");
-    editableBtn.className = "modal-editable";
-    editableBtn.innerText = "Click to edit";
-
-    const modalContent = document.createElement("div");
-    modalContent.className = "modal-content";
-
-    //Append content and elements
-    modalContent.innerHTML = content;
-    container.append(closeBtn, modalContent, editableBtn);
-    backdrop.append(container);
-    document.body.append(backdrop);
-
-    //backdrop.classList.add("show");
-    setTimeout(() => {
-      backdrop.classList.add("show");
-    }, 0);
-
-    // Attach event listeners
-    closeBtn.onclick = () => this.closeModal(backdrop);
-    backdrop.onclick = (e) => {
-      console.log(e.target);
-      if (e.target === backdrop) {
-        this.closeModal(backdrop);
-      }
-    };
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") {
-        this.closeModal(backdrop);
-      }
-    });
-  };
-
-  this.closeModal = (modalElement) => {
-    modalElement.classList.remove("show");
-    // document.body.removeChild(modalElement);
-    modalElement.ontransitionend = () => {
-      modalElement.remove();
-    };
-  };
-}
