@@ -76,6 +76,19 @@ public class TaskDAO extends DatabaseConnection {
 
     }
     
+    public int deleteTask(int id) {
+        String sql = "DELETE FROM `tasks` WHERE `id`=?";
+        int rowAffected = 0;
+        try (PreparedStatement st = con.prepareStatement(sql)){
+            st.setInt(1, id);
+            rowAffected = st.executeUpdate();
+        } catch (SQLException e) {
+            System.err.println("Error executing delete operation: " + e.getMessage()); // Log the error message
+            e.printStackTrace(); // Print the stack trace for debugging
+        }
+        return rowAffected;
+    }
+    
     public void insertWithDefault(Task t) {
         String sql = "INSERT INTO `tasks` (`user_id`, `title`, `description`)  VALUES (?, ?, ?) WHERE `todolist_id`=? AND `user_id`=?";
         

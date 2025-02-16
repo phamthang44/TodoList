@@ -24,9 +24,9 @@ async function fetchTasks() {
     tasks = await response.json();
 
     tasks.sortByPriority();
-    // Lọc từng nhóm theo status
+    // Lọc  status
     let toStart = tasks.filter((task) => task.status === "To start");
-    let inProgress = tasks.filter((task) => task.status === "In Progress");
+    let inProgress = tasks.filter((task) => task.status === "In progress");
     let done = tasks.filter((task) => task.status === "Done");
 
     renderTasks(".block__tostart.tasks", toStart);
@@ -51,10 +51,7 @@ function renderTasks(containerClass, tasks) {
                         <i class="fa fa-ellipsis-h"></i>
                       </button>
                       <div class="options-menu">
-                        <ul>
-                          <li><button class="edit">Edit Task</button></li>
-                          <li><button class="edit">Delete Task</button></li>
-                        </ul>
+                        <button class="delete">Delete Task</button>
                       </div>
                     </div>
                     <p class="desc">
@@ -68,19 +65,56 @@ function renderTasks(containerClass, tasks) {
                   </div>`;
     container.appendChild(li);
   });
+
   const taskItems = document.querySelectorAll(`${containerClass} .task-item`);
   taskItems.forEach((taskItem) => {
     const modal = new Modal();
-    taskItem.onclick = () => {
+    taskItem.onclick = (e) => {
       const index = +taskItem.getAttribute("data-index");
       const task = tasks[index];
+      console.log(e.target);
+      if (e.target.closest(`${containerClass} .task-item .task-options-btn`)) {
+        // Check if delete button is clicked
 
-      if (!task) {
-        console.error("Task not found for index:", index, filteredTasks);
-        return;
-      }
+        const menu = taskItem.querySelector(".options-menu");
+        document
+          .querySelectorAll(".task-item .task-card .options-menu")
+          .forEach((otherMenu) => {
+            if (otherMenu !== menu) {
+              otherMenu.classList.remove("active");
+            }
+          });
+        menu.classList.toggle("active");
 
-      modal.openModal(`
+        const deleteButtons = document.querySelectorAll(".delete");
+        if (deleteButtons) {
+          deleteButtons.forEach((deleteButton) => {
+            deleteButton.onclick = (e) => {
+              if (e.target === deleteButton) {
+                const confirmMsg = new ConfirmCard();
+                e.stopPropagation(); // Stop event from propagating to the parent taskItem.onclick
+                confirmMsg.openConfirmCard(`
+                  <p class="card-heading">Delete this task?</p>
+                  <p class="card-description">Are you sure that you want to delete <span class="strong-text">${task.title}</span></p>
+                  `);
+                menu.classList.toggle("active");
+              }
+            };
+          });
+        }
+      } else {
+        document
+          .querySelectorAll(".task-item .task-card .options-menu")
+          .forEach((menu) => {
+            menu.classList.remove("active");
+          });
+
+        if (!task) {
+          console.error("Task not found for index:", index, filteredTasks);
+          return;
+        }
+
+        modal.openModal(`
         <form class="updateTask" method="put" id="updateTask">
           <h3 class="modal-detail title" id="taskTitle">${task.title}</h3>
           <p class="modal-detail description" id="taskDescription">${task.description}</p>
@@ -94,37 +128,16 @@ function renderTasks(containerClass, tasks) {
           data-task-id="${task.id}"
           data-todolist-id="${task.todolist.id}" >Save</button>
         </form>`);
-      const form = document.querySelector("#updateTask");
-      form.addEventListener("submit", async (event) => {
-        event.preventDefault();
+        const form = document.querySelector("#updateTask");
+        form.addEventListener("submit", async (event) => {
+          event.preventDefault();
 
-        const submitter = event.submitter; // Get the submit button
-        const taskId = submitter.dataset.taskId;
-        const todolistId = submitter.dataset.todolistId;
+          const submitter = event.submitter; // Get the submit button
+          const taskId = submitter.dataset.taskId;
+          const todolistId = submitter.dataset.todolistId;
 
-        updateTask(form, submitter, taskId, todolistId, task);
-      });
-    };
-  });
-
-  const taskCards = document.querySelectorAll(".task-card"); // Chọn tất cả các .task-card
-
-  taskCards.forEach((taskCard) => {
-    taskCard.onclick = function (e) {
-      const menu = $(this).find(".options-menu");
-
-      // Nếu nhấn vào nút ba chấm
-      if (e.target.closest(".task-options-btn")) {
-        // Đóng tất cả các menu khác
-        $(".task-item .task-card .options-menu")
-          .not(menu)
-          .removeClass("active");
-
-        // Toggle (mở/đóng) menu của task hiện tại
-        menu.toggleClass("active");
-      } else {
-        // Nếu nhấn vào vùng ngoài nút ba chấm, ẩn menu
-        menu.removeClass("active");
+          updateTask(form, submitter, taskId, todolistId, task);
+        });
       }
     };
   });
@@ -147,6 +160,7 @@ async function updateTask(form, submitter, id, todolist_id, task) {
   const taskId = id;
   const { title, description, status, priority, updateAt } = updateInfos;
   const todolistId = todolist_id;
+
   if (!taskId) return alert("Task ID is missing!");
   if (!title.trim() || !description.trim())
     return alert("Please input valid info!");
@@ -171,7 +185,8 @@ async function updateTask(form, submitter, id, todolist_id, task) {
 
     const data = await response.json();
     if (data) {
-      refreshUpdatedData(data);
+      window.location.href =
+        contextPath + "/home?todolist_id=" + data.todolistId;
     }
   } catch (error) {
     console.error("Error updating task:", error);
@@ -180,19 +195,6 @@ async function updateTask(form, submitter, id, todolist_id, task) {
 }
 
 // Corrected form event listener
-// document.addEventListener("submit", function (event) {
-//   if (event.target.matches("#updateTask")) {
-//     event.preventDefault(); // Stop page reload
-
-//     const form = event.target;
-//     const submitter = event.submitter; // Get the submit button
-
-//     const taskId = submitter.dataset.taskId;
-//     const todolistId = submitter.dataset.todolistId;
-
-//     updateTask(form, submitter, taskId, todolistId);
-//   }
-// });
 
 function refreshUpdatedData(data) {
   const updatedTaskCards = document.querySelectorAll(".task-card");
@@ -223,65 +225,81 @@ function updateDataModal(data) {
   updatedPriority.dataset.priority = `${data.priority}`;
   updatedDate.innerText = `Updated at : ${data.updateAt}`;
 }
-// async function updateTask(form, submitter, id, todolist_id) {
-//   const updateInfos = getFormDataObject(form, submitter);
-//   const taskId = id;
-//   const { title, description, status, priority, updateAt } = updateInfos;
-//   const todolistId = todolist_id;
-//   if (!id) return alert("Task ID is missing!");
-//   if (!title.trim() || !description.trim())
-//     return alert("Please input valid info!");
-
-//   try {
-//     const response = await fetch(contextPath + "/updatetask", {
-//       method: "PUT",
-//       headers: { "Content-Type": "application/json" },
-//       body: JSON.stringify({
-//         id: taskId,
-//         title,
-//         description,
-//         status,
-//         priority,
-//         updateAt,
-//         todolistId: todolistId,
-//       }),
-//     });
-
-//     if (!response.ok) throw new Error("Update failed!");
-
-//     const data = await response.json();
-//     alert("Task updated successfully!");
-//     console.log("Updated Task:", data);
-//     window.location.href = contextPath + "/home?todolist_id=" + todolistId;
-//   } catch (error) {
-//     console.error("Error updating task:", error);
-//     alert("Failed to update task!");
-//   }
-// }
 
 fetchTasks();
 
-//update function
-// document.addEventListener("submit", function (event) {
-//   if (event.target.matches("#updateTask")) {
-//     const form = event.target.matches("#updateTask");
-//     const submitter = event.target.matches("#updateTaskSubmit");
-//     const taskId = event.target.matches("#taskId");
-//     const id = +taskId.data.id;
+// test
+// document.addEventListener("click", function (event) {
+//   console.log(event.target);
+//   if (event.target.matches(".delete")) {
 
-//     event.preventDefault(); // Ngăn chặn reload trang
-//     updateTask(form, submitter, id);
 //   }
 // });
 
-// async function sendingTask(data) {
-//   console.log("Sending data:", JSON.stringify(data));
-//   return await fetch(contextPath + "/updatetask", {
-//     method: "PUT",
-//     headers: { "Content-Type": "application/json" },
-//     body: JSON.stringify(data),
-//   });
-// }
+// ------------ CONFIRM CARD ------------------------------s
+function ConfirmCard() {
+  this.openConfirmCard = (content) => {
+    const backdrop = document.createElement("div");
+    backdrop.className = "modal-backdrop";
+
+    const confirmCard = document.createElement("div");
+    confirmCard.className = "card";
+
+    const closeButton = document.createElement("button");
+    closeButton.className = "exit-button";
+    closeButton.innerHTML = `<svg height="20px" viewBox="0 0 384 512">
+      <path
+        d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"
+      ></path>
+    </svg>`;
+    //content like delete file, delete task, update, ....
+    const cardConfirmContent = document.createElement("div");
+    cardConfirmContent.className = "card-content";
+    cardConfirmContent.innerHTML = content;
+
+    //button wrapper yes / no
+    const cardConfirmButtonWrapper = document.createElement("div");
+    cardConfirmButtonWrapper.className = "card-button-wrapper";
+    const buttonCancel = document.createElement("button");
+    buttonCancel.className = "card-button secondary";
+    buttonCancel.innerText = "Cancel";
+
+    const buttonYes = document.createElement("button");
+    buttonYes.className = "card-button primary";
+    buttonYes.innerText = "Yes";
+
+    cardConfirmButtonWrapper.append(buttonCancel, buttonYes);
+    confirmCard.append(
+      cardConfirmContent,
+      cardConfirmButtonWrapper,
+      closeButton
+    );
+    backdrop.append(confirmCard);
+    document.body.append(backdrop);
+
+    //to make this one have animation transition
+    setTimeout(() => {
+      backdrop.classList.add("show");
+    }, 0);
+
+    closeButton.onclick = () => this.closeConfirm(backdrop);
+    buttonCancel.onclick = () => this.closeConfirm(backdrop);
+
+    this.closeConfirm = (modalElement) => {
+      modalElement.classList.remove("show");
+      // document.body.removeChild(modalElement);
+      modalElement.ontransitionend = () => {
+        modalElement.remove();
+      };
+    };
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        this.closeModal(backdrop);
+      }
+    });
+  };
+}
 
 // ------------- MODAL BLOCK --------------------
 
@@ -425,72 +443,6 @@ function Modal() {
     });
   };
 }
-
-// document.addEventListener("DOMContentLoaded", function () {
-//   let draggedTask = null;
-
-//   // 1️⃣ Xử lý kéo
-//   document.querySelectorAll(".task-card").forEach((task) => {
-//     task.setAttribute("draggable", true); // Đảm bảo có thể kéo
-//     task.addEventListener("dragstart", function (event) {
-//       draggedTask = this;
-//       event.dataTransfer.setData("text/plain", this.getAttribute("data-id"));
-//       setTimeout(() => (this.style.opacity = "0.5"), 0);
-//     });
-
-//     task.addEventListener("dragend", function () {
-//       this.style.opacity = "1";
-//     });
-//   });
-
-//   // 2️⃣ Xử lý vùng dropzone
-//   document.querySelectorAll(".dropzone").forEach((zone) => {
-//     zone.addEventListener("dragover", function (event) {
-//       event.preventDefault();
-//       this.style.backgroundColor = "#f0f0f0";
-//     });
-
-//     zone.addEventListener("dragleave", function () {
-//       this.style.backgroundColor = "";
-//     });
-
-//     zone.addEventListener("drop", function (event) {
-//       event.preventDefault();
-//       this.style.backgroundColor = "";
-
-//       if (draggedTask) {
-//         this.appendChild(draggedTask); // Chuyển task vào cột mới
-
-//         let taskId = draggedTask.getAttribute("data-id");
-//         let newStatus =
-//           this.closest("div").querySelector("p.state").textContent; // Lấy tên trạng thái
-
-//         updateTaskStatus(taskId, newStatus); // Cập nhật dữ liệu
-//       }
-//     });
-//   });
-// });
-
-// // 3️⃣ Hàm cập nhật trạng thái trong dữ liệu
-// function updateTaskStatus(taskId, newStatus) {
-//   taskId = parseInt(taskId);
-//   let task = tasks.find((t) => t.id === taskId);
-//   console.log(task);
-//   if (task) {
-//     task.status = newStatus;
-//     console.log(`✅ Cập nhật Task ${taskId} -> ${newStatus}`);
-
-//     // 🛠 Nếu cần, gửi lên server bằng fetch API
-//     fetch("/updateTaskStatus", {
-//       method: "POST",
-//       headers: { "Content-Type": "application/json" },
-//       body: JSON.stringify({ id: taskId, status: newStatus }),
-//     })
-//       .then((res) => res.json())
-//       .then((data) => console.log("📡 Server response:", data))
-//       .catch((err) => console.error("❌ Update failed:", err));
-//   }
-// }
 
 Array.prototype.sortByPriority = function () {
   const priorityMap = {

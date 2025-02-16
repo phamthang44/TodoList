@@ -27,7 +27,7 @@ body {
 /* Common */
 
 ::-webkit-scrollbar {
-  width: var(--w-scrollbar);
+  width: 10px;
   height: var(--w-scrollbar);
   border-radius: 9999px;
 }
@@ -582,11 +582,16 @@ main {
 
 .task-card .task-options-btn {
   border: none;
+  padding: 10px;
   background-color: transparent;
   font-size: 1.6rem;
   transform: rotate(90deg);
   cursor: pointer;
   color: #767676;
+}
+
+.task-card .task-options-btn:hover {
+  color: #000;
 }
 
 .options-menu {
@@ -609,27 +614,18 @@ main {
   opacity: 1;
 }
 
-.options-menu ul {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-}
-
-.options-menu li {
-  padding: 10px;
-  cursor: pointer;
-  border-radius: 5px;
-}
-
-.options-menu .edit {
+.options-menu .delete {
   font-size: 2rem;
   background-color: transparent;
   border: none;
   flex: 1;
+  padding: 5px;
 }
 
-.options-menu li:hover {
+.options-menu .delete:hover {
   background-color: #cac7c7;
+  cursor: pointer;
+  border-radius: 5px;
 }
 
 .container-profile {
@@ -802,13 +798,13 @@ button {
 
 .modal-close {
   position: absolute;
-  top: 6px;
-  right: 6px;
-  width: 30px;
-  height: 30px;
+  top: 20px;
+  right: 20px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   background: #ebebeb;
-  font-size: 2rem;
+  font-size: 2.5rem;
   color: #666;
 }
 
@@ -829,7 +825,7 @@ button {
 }
 
 .modal-content {
-  padding-top: 30px;
+  padding-top: 10px;
   height: 100%;
 }
 
@@ -858,7 +854,7 @@ button {
   top: 20px;
   left: 50px;
   width: 140px;
-  height: 30px;
+  height: 50px;
   font-size: 2rem;
   background: #15a1b7;
   border-radius: 99px;
@@ -943,8 +939,8 @@ textarea {
   position: absolute;
   top: 20px;
   right: 10px;
-  width: 120px;
-  height: 30px;
+  width: 130px;
+  height: 50px;
   border-radius: 99px;
   color: #fff;
   background-color: red;
@@ -971,8 +967,8 @@ textarea {
   position: absolute;
   bottom: 20px;
   right: 20px;
-  width: 100px;
-  height: 40px;
+  width: 120px;
+  height: 50px;
   border-radius: 10px;
   background-color: #06d9fa;
   color: #fff;
@@ -980,6 +976,8 @@ textarea {
   transform: scale(0.9);
   transition: all 0.3s;
   border: 1px solid #fff;
+  font-size: 1.8rem;
+  font-weight: 600;
 }
 
 .save-btn:hover {
@@ -990,4 +988,87 @@ textarea {
 
 .save-btn:active {
   transform: scale(1);
+}
+
+/* Confirm card */
+.card {
+  width: 300px;
+  height: fit-content;
+  background: rgb(255, 255, 255);
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  padding: 30px;
+  position: relative;
+  box-shadow: 20px 20px 30px rgba(0, 0, 0, 0.068);
+}
+.card-content {
+  width: 100%;
+  height: fit-content;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.card-heading {
+  font-size: 20px;
+  font-weight: 700;
+  color: rgb(27, 27, 27);
+}
+.card-description {
+  line-height: 1.67;
+  font-weight: 400;
+  color: rgb(102, 102, 102);
+}
+.card-button-wrapper {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+.card-button {
+  width: 50%;
+  height: 35px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+}
+.primary {
+  background-color: rgb(255, 114, 109);
+  color: white;
+}
+.primary:hover {
+  background-color: rgb(255, 73, 66);
+}
+.secondary {
+  background-color: #ddd;
+}
+.secondary:hover {
+  background-color: rgb(197, 197, 197);
+}
+.exit-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background-color: transparent;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  cursor: pointer;
+}
+.exit-button:hover svg {
+  fill: black;
+}
+.exit-button svg {
+  fill: rgb(175, 175, 175);
+}
+
+.strong-text {
+  color: red;
+  font-weight: 500;
 }
