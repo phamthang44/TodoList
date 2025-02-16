@@ -22,8 +22,8 @@ async function fetchTasks() {
     console.log(contextPath);
     const response = await fetch(contextPath + `/tasks`);
     tasks = await response.json();
-    console.log(tasks);
 
+    tasks.sortByPriority();
     // Lọc từng nhóm theo status
     let toStart = tasks.filter((task) => task.status === "To start");
     let inProgress = tasks.filter((task) => task.status === "In Progress");
@@ -64,6 +64,7 @@ function renderTasks(containerClass, tasks) {
                     <p class="date create-date">Created at : ${task.createAt}</p>
                     <p class="date due-date">Due date : ${task.dueDate}</p>
                     <p class="date update-date">Updated at : ${task.updateAt}</p>
+                    <span class="task-priority">Priority : <span class="text-style" data-priority="${task.priority}">${task.priority}</span></span>
                   </div>`;
     container.appendChild(li);
   });
@@ -81,16 +82,28 @@ function renderTasks(containerClass, tasks) {
 
       modal.openModal(`
         <form class="updateTask" method="put" id="updateTask">
-          <span id="taskId" data-id=${task.id}></span>
           <h3 class="modal-detail title" id="taskTitle">${task.title}</h3>
           <p class="modal-detail description" id="taskDescription">${task.description}</p>
           <p><label>Status : </label><span class="modal-detail status text-style" data-status="${task.status}">${task.status}</span></p>
           <p><label>Priority : </label><span class="modal-detail priority text-style" data-priority="${task.priority}">${task.priority}</span></p>
           <p class="modal-detail date">Created at : ${task.createAt}</p>
-          <p class="modal-detail date">Updated at : ${task.updateAt}</p>
+          <p class="modal-detail update-date date">Updated at : ${task.updateAt}</p>
+          
           <span class="form-message"></span>
-          <button type="submit" class="save-btn" id="updateTaskSubmit">Save</button>
+          <button type="submit" class="save-btn" id="updateTaskSubmit" 
+          data-task-id="${task.id}"
+          data-todolist-id="${task.todolist.id}" >Save</button>
         </form>`);
+      const form = document.querySelector("#updateTask");
+      form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+
+        const submitter = event.submitter; // Get the submit button
+        const taskId = submitter.dataset.taskId;
+        const todolistId = submitter.dataset.todolistId;
+
+        updateTask(form, submitter, taskId, todolistId, task);
+      });
     };
   });
 
@@ -117,25 +130,27 @@ function renderTasks(containerClass, tasks) {
   });
 }
 
-function getFormDataObject(form, submitter) {
+function getFormDataObject(form, submitter, task) {
   let formData = new FormData(form, submitter);
   return {
-    title: formData.get("title") || "No Title",
-    description: formData.get("description") || "No Description",
-    status: formData.get("status") || "To start",
-    priority: formData.get("priority") || "Low",
-    updateAt: new Date().toISOString().split("T")[0],
+    title: formData.get("title") || task.title,
+    description: formData.get("description") || task.description,
+    status: formData.get("status") || task.status,
+    priority: formData.get("priority") || task.priority,
+    updateAt: new Date().toISOString().split("T")[0] || task.updateAt,
   };
 }
 
-async function updateTask(form, submitter, id, todolist_id) {
-  const updateInfos = getFormDataObject(form, submitter);
+async function updateTask(form, submitter, id, todolist_id, task) {
+  const updateInfos = getFormDataObject(form, submitter, task);
+
   const taskId = id;
   const { title, description, status, priority, updateAt } = updateInfos;
   const todolistId = todolist_id;
-  if (!id) return alert("Task ID is missing!");
+  if (!taskId) return alert("Task ID is missing!");
   if (!title.trim() || !description.trim())
     return alert("Please input valid info!");
+  if (!todolist_id) return alert("Todolist ID is missing!");
 
   try {
     const response = await fetch(contextPath + "/updatetask", {
@@ -143,41 +158,130 @@ async function updateTask(form, submitter, id, todolist_id) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         id: taskId,
-        title,
-        description,
-        status,
-        priority,
-        updateAt,
-        todolistId: todolistId,
+        title: title,
+        description: description,
+        status: status,
+        priority: priority,
+        updateAt: updateAt,
+        todolistId: todolistId, // Ensure this is included
       }),
     });
 
     if (!response.ok) throw new Error("Update failed!");
 
     const data = await response.json();
-    alert("Task updated successfully!");
-    console.log("Updated Task:", data);
-    window.location.href = contextPath + "/home?todolist_id=" + todolistId;
+    if (data) {
+      refreshUpdatedData(data);
+    }
   } catch (error) {
     console.error("Error updating task:", error);
     alert("Failed to update task!");
   }
 }
 
+// Corrected form event listener
+// document.addEventListener("submit", function (event) {
+//   if (event.target.matches("#updateTask")) {
+//     event.preventDefault(); // Stop page reload
+
+//     const form = event.target;
+//     const submitter = event.submitter; // Get the submit button
+
+//     const taskId = submitter.dataset.taskId;
+//     const todolistId = submitter.dataset.todolistId;
+
+//     updateTask(form, submitter, taskId, todolistId);
+//   }
+// });
+
+function refreshUpdatedData(data) {
+  const updatedTaskCards = document.querySelectorAll(".task-card");
+  updatedTaskCards.forEach((updatedTaskCard) => {
+    if (updatedTaskCard.dataset.id === data.id) {
+      const updatedTaskTitle = updatedTaskCard.querySelector(".task-title");
+      const updatedTaskDesc = updatedTaskCard.querySelector(".desc");
+      const updatedTaskDate = updatedTaskCard.querySelector(".update-date");
+      updatedTaskTitle.innerText = `${data.title}`;
+      updatedTaskDesc.innerText = `${data.description}`;
+      updatedTaskDate.innerText = `${data.updateAt}`;
+    }
+  });
+}
+
+function updateDataModal(data) {
+  const updatedTitle = document.querySelector("#taskTitle");
+  const updatedDesc = document.querySelector("#taskDescription");
+  const updatedStatus = document.querySelector(".modal-detail.status");
+  const updatedPriority = document.querySelector(".modal-detail.priority");
+  const updatedDate = document.querySelector(".modal-detail.update-date");
+
+  updatedTitle.innerText = `${data.title}`;
+  updatedDesc.innerText = `${data.description}`;
+  updatedStatus.innerText = `${data.status}`;
+  updatedStatus.dataset.status = `${data.status}`;
+  updatedPriority.innerText = `${data.priority}`;
+  updatedPriority.dataset.priority = `${data.priority}`;
+  updatedDate.innerText = `Updated at : ${data.updateAt}`;
+}
+// async function updateTask(form, submitter, id, todolist_id) {
+//   const updateInfos = getFormDataObject(form, submitter);
+//   const taskId = id;
+//   const { title, description, status, priority, updateAt } = updateInfos;
+//   const todolistId = todolist_id;
+//   if (!id) return alert("Task ID is missing!");
+//   if (!title.trim() || !description.trim())
+//     return alert("Please input valid info!");
+
+//   try {
+//     const response = await fetch(contextPath + "/updatetask", {
+//       method: "PUT",
+//       headers: { "Content-Type": "application/json" },
+//       body: JSON.stringify({
+//         id: taskId,
+//         title,
+//         description,
+//         status,
+//         priority,
+//         updateAt,
+//         todolistId: todolistId,
+//       }),
+//     });
+
+//     if (!response.ok) throw new Error("Update failed!");
+
+//     const data = await response.json();
+//     alert("Task updated successfully!");
+//     console.log("Updated Task:", data);
+//     window.location.href = contextPath + "/home?todolist_id=" + todolistId;
+//   } catch (error) {
+//     console.error("Error updating task:", error);
+//     alert("Failed to update task!");
+//   }
+// }
+
 fetchTasks();
 
 //update function
-document.addEventListener("submit", function (event) {
-  if (event.target.matches("#updateTask")) {
-    const form = event.target.matches("#updateTask");
-    const submitter = event.target.matches("#updateTaskSubmit");
-    const taskId = event.target.matches("#taskId");
-    const id = +taskId.data.id;
+// document.addEventListener("submit", function (event) {
+//   if (event.target.matches("#updateTask")) {
+//     const form = event.target.matches("#updateTask");
+//     const submitter = event.target.matches("#updateTaskSubmit");
+//     const taskId = event.target.matches("#taskId");
+//     const id = +taskId.data.id;
 
-    event.preventDefault(); // Ngăn chặn reload trang
-    updateTask(form, submitter, id);
-  }
-});
+//     event.preventDefault(); // Ngăn chặn reload trang
+//     updateTask(form, submitter, id);
+//   }
+// });
+
+// async function sendingTask(data) {
+//   console.log("Sending data:", JSON.stringify(data));
+//   return await fetch(contextPath + "/updatetask", {
+//     method: "PUT",
+//     headers: { "Content-Type": "application/json" },
+//     body: JSON.stringify(data),
+//   });
+// }
 
 // ------------- MODAL BLOCK --------------------
 
@@ -224,6 +328,15 @@ function Modal() {
     //     this.closeModal(backdrop);
     //   }
     // };
+    let backdropClickListener = (e) => {
+      console.log(e.target);
+      if (e.target === backdrop) {
+        this.closeModal(backdrop);
+      }
+    };
+
+    backdrop.addEventListener("click", backdropClickListener);
+
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape") {
         this.closeModal(backdrop);
@@ -231,6 +344,7 @@ function Modal() {
     });
 
     editableBtn.onclick = () => {
+      backdrop.removeEventListener("click", backdropClickListener);
       this.changeEditableState(modalContent);
       container.append(cancelEdit);
       closeBtn.remove();
@@ -377,3 +491,12 @@ function Modal() {
 //       .catch((err) => console.error("❌ Update failed:", err));
 //   }
 // }
+
+Array.prototype.sortByPriority = function () {
+  const priorityMap = {
+    High: 3,
+    Medium: 2,
+    Low: 1,
+  };
+  this.sort((a, b) => priorityMap[b.priority] - priorityMap[a.priority]);
+};

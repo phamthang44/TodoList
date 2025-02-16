@@ -1,5 +1,5 @@
 //mục tiêu là viết 1 hàm có thể dùng cho việc render dữ liệu ra giao diện co nhiều trang dạng table và có form trong đó ví dụ
-//update, add
+//add
 //còn delete thì ko cần ở đây hoặc có thể thì phải làm cho nó ask before confirming
 // ngoài task ra thì còn 1 trang nữa dùng crud là todolist quản lí todolist đó là dashboard
 

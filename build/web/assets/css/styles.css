@@ -26,6 +26,22 @@ body {
 }
 /* Common */
 
+::-webkit-scrollbar {
+  width: var(--w-scrollbar);
+  height: var(--w-scrollbar);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-track {
+  background: #0000;
+}
+::-webkit-scrollbar-thumb {
+  background: #0000;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #c1c2c5;
+}
+
 input,
 textarea,
 select,
@@ -439,7 +455,7 @@ main {
 }
 
 .block__dashboardshow {
-  margin-top: 50px;
+  margin-top: 20px;
   padding-right: 20px;
   padding-left: 30px;
   display: flex;
@@ -499,7 +515,8 @@ main {
   background-color: #f2f6ff;
   padding: 10px;
   border-radius: 10px;
-  height: 100%;
+  height: 60%;
+  overflow-y: auto;
 }
 .task-item {
   margin-top: 5px;
@@ -535,6 +552,25 @@ main {
   line-height: 1.5;
   flex: 1;
   color: #767676;
+}
+
+.task-card .task-priority {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  font-weight: 550;
+}
+
+.task-card:has(.task-priority[data-priority="Low"]) {
+  color: #8bc349;
+}
+
+.task-card:has(.task-priority[data-priority="Medium"]) {
+  color: #ffbf00;
+}
+
+.task-card:has(.task-priority[data-priority="High"]) {
+  color: red;
 }
 
 .date {

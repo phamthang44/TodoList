@@ -8,6 +8,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import dal.TaskDAO;
+import dto.TaskDTO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -15,6 +16,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
+import java.text.SimpleDateFormat;
 import java.util.Map;
 import java.util.stream.Collectors;
 import model.Task;
@@ -61,7 +63,7 @@ public class UpdateTaskServlet extends HttpServlet {
         
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
-        String todolistId = request.getParameter("todolist_id");
+        objectMapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd")); // Global date format
         
         BufferedReader reader = request.getReader();
         String json = reader.lines().collect(Collectors.joining());
@@ -72,7 +74,7 @@ public class UpdateTaskServlet extends HttpServlet {
         }
 
         // Chuyển JSON thành Map thay vì Object Task
-        Task task = objectMapper.readValue(json, Task.class);
+        TaskDTO task = objectMapper.readValue(json, TaskDTO.class);
 
         if (task.getId() <= 0) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "{\"error\": \"Task ID is required!\"}");
@@ -83,9 +85,10 @@ public class UpdateTaskServlet extends HttpServlet {
         
         TaskDAO taskDAO = new TaskDAO();
        
-        taskDAO.updateTask(task.getTitle(), task.getDescription(), task.getPriority(), task.getStatus(), task.getId());
+        taskDAO.updateTask(task.getTitle(), task.getDescription(), task.getPriority(), task.getStatus(), task.getUpdateAt(), task.getId());
         
-        response.sendRedirect("/home?todolist_id=" + task.getTodolist().getId());
+        response.getWriter().write(objectMapper.writeValueAsString(task));
+        
     }
 
     @Override

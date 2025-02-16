@@ -1,5 +1,6 @@
 package model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.time.LocalDate;
 
 
@@ -8,7 +9,8 @@ public class Task {
 
     private int id;
     private User user; // Liên kết với User
-
+    
+    @JsonIgnoreProperties
     private Todolist todolist; // Liên kết với Todolist
     private String title;
     private String description;

@@ -4,6 +4,7 @@
  */
 package dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalDate;
 import model.Todolist;
 import model.User;
@@ -23,6 +24,8 @@ public class TaskDTO {
     private String priority;
     private LocalDate dueDate; // Sử dụng LocalDate cho ngày (chỉ ngày, không có thời gian)
     private LocalDate createAt; // 
+    
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate updateAt; // 
 
     public TaskDTO() {
