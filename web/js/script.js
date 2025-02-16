@@ -35,6 +35,74 @@ async function fetchTasks() {
   } catch (error) {}
 }
 
+function searchTasksByDate(fromDate, toDate, allTasks) {
+  // Chuyển đổi thành dạng timestamp để so sánh
+  const fromTimestamp = fromDate ? new Date(fromDate).getTime() : null;
+  const toTimestamp = toDate ? new Date(toDate).getTime() : null;
+
+  const filteredTasks = allTasks.filter((task) => {
+    const taskDate = new Date(task.createAt).getTime(); // Hoặc updatedAt nếu muốn
+
+    return (
+      (!fromTimestamp || taskDate >= fromTimestamp) &&
+      (!toTimestamp || taskDate <= toTimestamp)
+    );
+  });
+
+  // Nhóm lại theo trạng thái
+  const groupedTasks = {
+    todo: filteredTasks.filter((task) => task.status === "To start"),
+    inProgress: filteredTasks.filter((task) => task.status === "In progress"),
+    done: filteredTasks.filter((task) => task.status === "Done"),
+  };
+
+  // Render lại giao diện
+  renderTasks(".block__tostart.tasks", groupedTasks.todo);
+  renderTasks(".block__inprogress.tasks", groupedTasks.inProgress);
+  renderTasks(".block__done.tasks", groupedTasks.done);
+}
+
+// Bắt sự kiện khi nhấn tìm kiếm
+document.querySelector(".date-filter").addEventListener("click", () => {
+  const fromDate = document.querySelector(".input.input-date.from-date").value;
+  const toDate = document.querySelector("input.input-date.to-date").value;
+  console.log(fromDate, toDate);
+  searchTasksByDate(fromDate, toDate, tasks);
+});
+
+// Hàm tìm kiếm và hiển thị task ngay lập tức mà không cần fetch API
+function searchAndRenderTasks(keyword, allTasks) {
+  // Lọc task theo từ khóa (tìm trong title hoặc description)
+  const filteredTasks = allTasks.filter(
+    (task) =>
+      task.title.toLowerCase().includes(keyword.toLowerCase()) ||
+      task.description.toLowerCase().includes(keyword.toLowerCase())
+  );
+
+  // Nhóm tasks theo trạng thái (ví dụ: "todo", "in-progress", "done")
+  const groupedTasks = {
+    todo: filteredTasks.filter((task) => task.status === "To start"),
+    inProgress: filteredTasks.filter((task) => task.status === "In progress"),
+    done: filteredTasks.filter((task) => task.status === "Done"),
+  };
+
+  // Render lại từng nhóm task theo container tương ứng
+  renderTasks(".block__tostart.tasks", groupedTasks.todo);
+  renderTasks(".block__inprogress.tasks", groupedTasks.inProgress);
+  renderTasks(".block__done.tasks", groupedTasks.done);
+}
+
+// Sự kiện onchange để tìm kiếm ngay khi nhập
+document.querySelector("#search_input").addEventListener("input", (e) => {
+  const keyword = e.target.value;
+  searchAndRenderTasks(keyword, tasks); // allTasks là danh sách từ API
+});
+//mong muốn thứ nhất là tìm dựa trên keywords
+//thứ 2 sắp xếp theo thứ tự hiện từ priority
+//và cần xếp đúng chỗ task của status nào ra cái đó
+//tìm theo quy tắc là title hoặc description trả về 1 danh sách task tìm thấy
+//và sau đó sắp xếp render lại giao diện không cần gọi lại API
+
 function renderTasks(containerClass, tasks) {
   let container = document.querySelector(containerClass);
 

@@ -173,7 +173,7 @@
                                     <label>From</label>
                                     <input
                                         type="date"
-                                        class="input input-date"
+                                        class="input input-date  from-date"
                                         id="datePicker"
                                         placeholder="From"
                                         />
@@ -184,7 +184,7 @@
                                     <label>To</label>
                                     <input
                                         type="date"
-                                        class="input input-date"
+                                        class="input input-date to-date"
                                         id="datePicker"
                                         placeholder="To"
                                         />
