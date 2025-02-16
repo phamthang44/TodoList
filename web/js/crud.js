@@ -14,10 +14,13 @@ function CrudTasks(options) {
 
   function getFormDataObject(form, submitter) {
     let formData = new FormData(form, submitter);
+    console.log(formData.get("title").innerText);
+
     const info = getTaskInfo();
-    return {
-      title: formData.get("title") || "No Title",
-      description: formData.get("description") || "No Description",
+
+    const obj = {
+      title: safeAlert(formData.get("title")) || "No Title",
+      description: safeAlert(formData.get("description")) || "No Description",
       status: formData.get("status") || "To start",
       priority: formData.get("priority") || "Low",
       dueDate:
@@ -28,6 +31,7 @@ function CrudTasks(options) {
       createAt: new Date().toISOString().split("T")[0],
       updateAt: new Date().toISOString().split("T")[0],
     };
+    return obj;
   }
 
   function validateTaskData(task) {
@@ -74,6 +78,24 @@ function CrudTasks(options) {
     container.innerHTML = rows;
   }
 
+  function safeAlert(userInput) {
+    const sanitizedInput = userInput.replace(
+      /[<>"'&]/g,
+      (match) =>
+        ({
+          "<": "&lt;",
+          ">": "&gt;",
+          '"': "&quot;",
+          "'": "&#39;",
+          "&": "&amp;",
+        }[match])
+    );
+
+    return sanitizedInput;
+  }
+
+  form.addEventListener("submit", handleSubmit);
+
   async function handleSubmit(event) {
     event.preventDefault();
 
@@ -99,7 +121,6 @@ function CrudTasks(options) {
       alert("There is an error when creating a task!");
     }
   }
-  form.addEventListener("submit", handleSubmit);
 
   async function fetchTasks() {
     try {

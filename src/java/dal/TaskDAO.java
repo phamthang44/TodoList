@@ -56,12 +56,12 @@ public class TaskDAO extends DatabaseConnection {
         return list;
     }
     
-    public void updateTask(String title, String description, String priority, String status, LocalDate updateAt,int id) {
+    public int updateTask(String title, String description, String priority, String status, LocalDate updateAt,int id) {
         String sql = "UPDATE `tasks` SET `title`=?, `description`=?, `status`=?, `priority`=?, `updated_at`=? WHERE `id`=?";
         if (title == null || description == null || priority == null || status == null) {
-            return;
+            return 0;
         }
-        
+        int rowsAffected = 0;
         try (PreparedStatement st = con.prepareStatement(sql)){
             st.setString(1, title);
             st.setString(2, description);
@@ -69,10 +69,11 @@ public class TaskDAO extends DatabaseConnection {
             st.setString(4, priority);
             st.setDate(5, java.sql.Date.valueOf(updateAt));
             st.setInt(6, id);
-            st.executeUpdate();
+            rowsAffected = st.executeUpdate();
         } catch (SQLException e) {
        
         }
+        return rowsAffected;
 
     }
     

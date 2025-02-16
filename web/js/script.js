@@ -96,6 +96,7 @@ function renderTasks(containerClass, tasks) {
                 confirmMsg.openConfirmCard(`
                   <p class="card-heading">Delete this task?</p>
                   <p class="card-description">Are you sure that you want to delete <span class="strong-text">${task.title}</span></p>
+                  <p class="card-description card-info">ID : <span class="strong-text" data-task-id="${task.id}">${task.id}</span></p>
                   `);
                 menu.classList.toggle("active");
               }
@@ -154,6 +155,29 @@ function getFormDataObject(form, submitter, task) {
   };
 }
 
+async function deleteTask(task) {
+  if (!task.id) return alert("Task ID is missing!");
+  if (!task.todolist.id) return alert("Todolist ID is missing!");
+  try {
+    const response = await fetch(contextPath + "/deletetask", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id: task.id, todolistId: task.todolist.id }),
+    });
+
+    if (!response.ok) throw new Error("Delete failed!");
+
+    const data = await response.json();
+    if (data) {
+      window.location.href =
+        contextPath + "/home?todolist_id=" + data.todolistId;
+    }
+  } catch (error) {
+    console.error("Error deleting task:", error);
+    alert("Failed to delete task!");
+  }
+}
+
 async function updateTask(form, submitter, id, todolist_id, task) {
   const updateInfos = getFormDataObject(form, submitter, task);
 
@@ -195,6 +219,14 @@ async function updateTask(form, submitter, id, todolist_id, task) {
 }
 
 // Corrected form event listener
+
+function addNewTaskButtonOnList() {
+  const addNewTask = document.createElement("li");
+  addNewTask.classList.add("task-item");
+  addNewTask.innerHTML = `<div class="place-to-add">
+                              <button class="add-task-btn">Add new task</button>
+                            </div>`;
+}
 
 function refreshUpdatedData(data) {
   const updatedTaskCards = document.querySelectorAll(".task-card");
@@ -281,6 +313,23 @@ function ConfirmCard() {
     setTimeout(() => {
       backdrop.classList.add("show");
     }, 0);
+
+    buttonYes.onclick = (e) => {
+      this.closeConfirm(backdrop);
+      const chosenTaskCard = e.target.closest(".card");
+      const taskInfo = chosenTaskCard.querySelector(
+        ".card-description.card-info .strong-text"
+      );
+
+      const taskId = +taskInfo.dataset.taskId;
+
+      if (taskId) {
+        const task = tasks.find((task) => task.id === taskId);
+
+        if (!task) return alert("Task not found!");
+        deleteTask(task);
+      } else return alert("Task ID is missing!");
+    };
 
     closeButton.onclick = () => this.closeConfirm(backdrop);
     buttonCancel.onclick = () => this.closeConfirm(backdrop);

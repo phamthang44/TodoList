@@ -47,7 +47,7 @@ public class UpdateTaskServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
     }
 
     @Override
@@ -60,35 +60,73 @@ public class UpdateTaskServlet extends HttpServlet {
     protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
-        
+
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
         objectMapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd")); // Global date format
-        
+
         BufferedReader reader = request.getReader();
         String json = reader.lines().collect(Collectors.joining());
-        
+
         if (json.isEmpty()) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Request body is empty!");
             return;
         }
 
         // Chuyển JSON thành Map thay vì Object Task
-        TaskDTO task = objectMapper.readValue(json, TaskDTO.class);
-
-        if (task.getId() <= 0) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "{\"error\": \"Task ID is required!\"}");
+//        TaskDTO task = objectMapper.readValue(json, TaskDTO.class);
+//
+//        if (task.getId() <= 0) {
+//            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "{\"error\": \"Task ID is required!\"}");
+//            return;
+//        }
+//        
+//        
+//        
+//        TaskDAO taskDAO = new TaskDAO();
+//       
+//        taskDAO.updateTask(task.getTitle(), task.getDescription(), task.getPriority(), task.getStatus(), task.getUpdateAt(), task.getId());
+//        
+//        response.getWriter().write(objectMapper.writeValueAsString(task));
+        TaskDTO task;
+        try {
+            task = objectMapper.readValue(json, TaskDTO.class);
+        } catch (Exception e) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "{\"error\": \"Invalid JSON format!\"}");
             return;
         }
-        
-        
-        
+
+        // Validate dữ liệu đầu vào
+        if (task.getId() <= 0) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "{\"error\": \"Task ID is required and must be greater than 0!\"}");
+            return;
+        }
+        if (task.getTitle() == null || task.getTitle().trim().isEmpty()) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "{\"error\": \"Title is required!\"}");
+            return;
+        }
+        if (task.getPriority() == null || task.getStatus() == null) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "{\"error\": \"Priority and Status are required!\"}");
+            return;
+        }
+
         TaskDAO taskDAO = new TaskDAO();
-       
-        taskDAO.updateTask(task.getTitle(), task.getDescription(), task.getPriority(), task.getStatus(), task.getUpdateAt(), task.getId());
-        
-        response.getWriter().write(objectMapper.writeValueAsString(task));
-        
+        int rowsAffected = taskDAO.updateTask(
+                task.getTitle(),
+                task.getDescription(),
+                task.getPriority(),
+                task.getStatus(),
+                task.getUpdateAt(),
+                task.getId()
+        );
+
+        if (rowsAffected == 1) {
+            response.setStatus(HttpServletResponse.SC_OK);
+            response.getWriter().write(objectMapper.writeValueAsString(task));
+        } else {
+            response.sendError(HttpServletResponse.SC_NOT_FOUND, "{\"error\": \"Task not found or update failed!\"}");
+        }
+
     }
 
     @Override

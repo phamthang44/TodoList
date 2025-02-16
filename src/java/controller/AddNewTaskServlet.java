@@ -97,7 +97,7 @@ public class AddNewTaskServlet extends HttpServlet {
         }
 
         if (taskDTO.getStatus() == null
-                || !(taskDTO.getStatus().equals("To start") || taskDTO.getStatus().equals("In progress") || taskDTO.getStatus().equals("Completed"))) {
+                || !(taskDTO.getStatus().equals("To start") || taskDTO.getStatus().equals("In progress") || taskDTO.getStatus().equals("Done"))) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Status is invalid!");
             return;
         }
